@@ -40,10 +40,25 @@ class @Tracer
   colorFor: (ray) =>
     @recursionCounter--
     if @recursionCounter > 0
-      hit = @world.hit(ray)
+      hit = @world.hit ray
       if hit isnt null
         color = hit.geo.material.colorFor(hit, @world, this)
         @recursionCounter = maxDepth
         color
     @recursionCounter = @maxDepth
     @world.backgroundColor
+
+class @Node extends Geometry
+  constructor: (@transformation, @geometries, material) ->
+    super material
+  hit: (ray) =>
+    r = new Ray(@transformation.i.x(ray.o), @transformation.i.x(ray.d))
+    temp = null
+    for element in @geometries
+      h = element.hit(ray)
+      if temp is null
+        temp = h
+      if temp isnt null and h isnt null and temp.t > h.t
+        temp = h
+    if temp isnt null
+      return new Hit(temp.t, ray, temp.geo, @transformation.i.transpond().cross(new Vector3(temp.normal.x, temp.normal.y, temp.normal.z)).asNormal())
