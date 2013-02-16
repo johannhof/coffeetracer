@@ -1,14 +1,3 @@
-class @Color
-  constructor: (@r, @g, @b) ->
-  add: (c) =>
-    new Color(@r + c.r, @g + c.g, @b + c.b)
-  sub: (c) =>
-    new Color(@r - c.r, @g - c.g, @b - c.b)
-  mul: (c) =>
-    new Color(@r * c.r, @g * c.g, @b * c.b)
-  mul: (d) =>
-    new Color(@r * d, @g * d, @b * d)
-
 canvas = document.getElementById("mainCanvas")
 ctx = canvas.getContext("2d")
 ctx.fillStyle = "white"
