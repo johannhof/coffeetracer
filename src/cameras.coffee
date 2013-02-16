@@ -1,5 +1,5 @@
 class @Camera
-  constructor (@e, @g, @t) ->
+  constructor: (@e, @g, @t) ->
     @w = @g.mul(1.0 / @g.magnitude).mul(-1)
     @u = @t.cross(@w).mul(1.0 / @t.cross(@w).magnitude)
     @v = @w.cross(@u)
