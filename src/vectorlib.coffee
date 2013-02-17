@@ -49,7 +49,7 @@ class @Mat3x3
   changeCol3: (v) ->
     new Mat3x3(@m11, @m12, v.x, @m21, @m22, v.y, @m31, @m32, v.z)
 
-class Mat4x4
+class @Mat4x4
   constructor: (@m11, @m12, @m13, @m14, @m21, @m22, @m23, @m24, @m31, @m32, @m33, @m34, @m41, @m42, @m43, @m44) ->
   transpond: =>
     new Mat4x4(@m11, @m21, @m31, @m41, @m12, @m22, @m32, @m42, @m13, @m23, @m33, @m43, @m14, @m24, @m34, @m44)

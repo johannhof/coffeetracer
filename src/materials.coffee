@@ -1,11 +1,11 @@
-class SingleColorMaterial
+class @SingleColorMaterial
   constructor: (@color) ->
   colorFor: (hit, world, tracer) ->
     for l in world.lights
       if l.illuminates(hit.ray.at(hit.t), world) then return @color
     world.backgroundColor
 
-class LambertMaterial
+class @LambertMaterial
   constructor: (@color) ->
   colorFor: (hit, world, tracer) ->
     returnColor = @color.mulColor(world.ambient)
@@ -14,7 +14,7 @@ class LambertMaterial
         returnColor = returnColor.add(@color.mulColor(l.color.mulNumber(Math.max(l.directionFrom(hit.ray.at(hit.t)).dot(hit.normal), 0))))
     returnColor
 
-class PhongMaterial
+class @PhongMaterial
   constructor: (@diffuse, @specular, @exponent) ->
   colorFor: (hit, world, tracer) ->
     returnColor = @diffuse.mulColor(world.ambient)

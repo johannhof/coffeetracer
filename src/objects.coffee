@@ -7,7 +7,7 @@ class @Plane extends Geometry
     @a = new Point3(0, 0, 0)
     @n = new Normal3(0, 1, 0)
   hit: (ray) =>
-    t = @a.sub(ray.o).dot(@n) / ray.d.dot(@n)
+    t = @a.subPoint(ray.o).dot(@n) / ray.d.dot(@n)
     if t > epsilon new Hit(t, ray, this, @n) else null
 
 class @AxisAlignedBox extends Geometry
@@ -73,21 +73,21 @@ class @AxisAlignedBox extends Geometry
       when 5 then return new Normal3(0, 0, 1)
     null
 
-class Sphere extends Geometry
+class @Sphere extends Geometry
   constructor: (material) ->
     super material
     @c = new Point3(0, 0, 0)
     @r = 1
   hit: (ray) =>
     a = ray.d.dot(ray.d)
-    b = ray.d.dot((ray.o.sub(@c)).mul(2));
-    cn = (ray.o.sub(@c).dot(ray.o.sub(@c)) - (@r * @r));
+    b = ray.d.dot((ray.o.subPoint(@c)).mul(2));
+    cn = (ray.o.subPoint(@c).dot(ray.o.subPoint(@c)) - (@r * @r));
     d = (b * b) - 4.0 * a * cn;
     t = (-b - Math.sqrt(d)) / (2.0 * a);
     if d > epsilon
       if t > epsilon
-        return new Hit(t, ray, this, (ray.o.sub(@c).add(ray.d.mul(t)).mul(1.0 / @r).asNormal()))
+        return new Hit(t, ray, this, (ray.o.subPoint(@c).add(ray.d.mul(t)).mul(1.0 / @r).asNormal()))
       t = (-b + Math.sqrt(d)) / (2.0 * a)
       if t > epsilon
-        return new Hit(t, ray, this, (ray.o.sub(@c).add(ray.d.mul(t)).mul(1.0 / @r).asNormal()))
+        return new Hit(t, ray, this, (ray.o.subPoint(@c).add(ray.d.mul(t)).mul(1.0 / @r).asNormal()))
     null

@@ -65,15 +65,15 @@ class @Node extends Geometry
 
 class @Transform
   constructor: (@m, @i) ->
-  Translation: (x, y, z) ->
+  @Translation: (x, y, z) ->
     new Transform(new Mat4x4(1, 0, 0, x, 0, 1, 0, y, 0, 0, 1, z, 0, 0, 0, 1), new Mat4x4(1, 0, 0, -x, 0, 1, 0, -y, 0, 0, 1, -z, 0, 0, 0, 1))
-  Scaling: (sx, sy, sz) ->
+  @Scaling: (sx, sy, sz) ->
     new Transform(new Mat4x4(sx, 0, 0, 0, 0, sy, 0, 0, 0, 0, sz, 0, 0, 0, 0, 1), new Mat4x4(1 / sx, 0, 0, 0, 0, 1 / sy, 0, 0, 0, 0, 1 / sz, 0, 0, 0, 0, 1))
-  XRotation: (angle) ->
+  @XRotation: (angle) ->
     new Transform(new Mat4x4(1, 0, 0, 0, 0, Math.cos(angle), -Math.sin(angle), 0, 0, Math.sin(angle), Math.cos(angle), 0, 0, 0, 0, 1), new Mat4x4(1, 0, 0, 0, 0, Math.cos(angle), Math.sin(angle), 0, 0, -Math.sin(angle), Math.cos(angle), 0, 0, 0, 0, 1))
-  YRotation: (angle) ->
+  @YRotation: (angle) ->
     new Transform(new Mat4x4(Math.cos(angle), 0, Math.sin(angle), 0, 0, 1, 0, 0, -Math.sin(angle), 0, Math.cos(angle), 0, 0, 0, 0, 1), new Mat4x4(Math.cos(angle), 0, -Math.sin(angle), 0, 0, 1, 0, 0, Math.sin(angle), 0, Math.cos(angle), 0, 0, 0, 0, 1))
-  ZRotation: (angle) ->
+  @ZRotation: (angle) ->
     new Transform(new Mat4x4(Math.cos(angle), -Math.sin(angle), 0, 0, Math.sin(angle), Math.cos(angle), 0, 0, 0, 0, 1, 0, 0, 0, 0, 1), new Mat4x4(Math.cos(angle), Math.sin(angle), 0, 0, -Math.sin(angle), Math.cos(angle), 0, 0, 0, 0, 1, 0, 0, 0, 0, 1))
   translate: (x, y, z) ->
     new Transform(@m.xMat(new Mat4x4(1, 0, 0, x, 0, 1, 0, y, 0, 0, 1, z, 0, 0, 0, 1)), @i.xMat(new Mat4x4(1, 0, 0, -x, 0, 1, 0, -y, 0, 0, 1, -z, 0, 0, 0, 1)))

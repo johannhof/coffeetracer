@@ -6,7 +6,7 @@ height = canvas.height
 ctx.fillRect(0, 0, width, height)
 imgData = ctx.getImageData(0, 0, width, height)
 lights = [new PointLight(new Color(1, 1, 1), false, new Point3(0, 6, 6))]
-objects = [new Node(Transform.Scaling(1, 0.2, 1).xRotate(Math.toRadians(-15)).zRotate(Math.toRadians(-15)).yRotate(Math.toRadians(0)), [new Sphere(new PhongMaterial(new Color(1, 0, 0), new Color(1, 1, 1), 20))], null)]
+objects = [new Node(Transform.Scaling(1, 0.2, 1), [new Sphere(new PhongMaterial(new Color(1, 0, 0), new Color(1, 1, 1), 20))], null)]
 cam = new PerspectiveCamera(new Point3(5, 5, 5), new Vector3(-1, -1, -1), new Vector3(0, 1, 0), Math.PI / 4)
 world = new World(new Color(0, 0, 0), objects, lights, new Color(0.1, 0.1, 0.1), 1)
 tracer = new Tracer(world)
