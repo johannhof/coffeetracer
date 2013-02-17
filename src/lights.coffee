@@ -10,7 +10,7 @@ class @DirectionalLight
   directionFrom: (point) ->
     @direction.mul(-1)
 
-class @DirectionalLight
+class @PointLight
   constructor: (@color, @castsShadows, @position) ->
   illuminates: (point, world) ->
     if not @castsShadows then return true
