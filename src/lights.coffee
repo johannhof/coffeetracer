@@ -19,6 +19,8 @@ class @PointLight
     if hit is null or Math.round(hit.t * 100000.0) / 100000.0 >= Math.round(ray.tOf(point) * 100000) / 100000.0
       return true
     false
+  directionFrom: (point) ->
+    @position.subPoint(point).normalized()
 
 class @Spotlight
   constructor: (@color, @castsShadows, @position, @direction, @halfAngle) ->
