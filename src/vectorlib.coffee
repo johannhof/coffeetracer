@@ -16,6 +16,8 @@ class @Vector3
   asNormal: =>
     v = @normalized()
     new Normal3(v.x, v.y, v.z)
+  reflectedOn: (n) =>
+    @add(n.mul((@dot(n) * -2.0))).mul(-1)
 
 class @Normal3
   constructor: (@x, @y, @z) ->
