@@ -16,7 +16,7 @@ class @Ray
   at: (t) =>
     @o.add(@d.mul(t))
   tOf: (p) =>
-    @o.sub(p).magnitude
+    @o.subPoint(p).magnitude
 
 class @World
   constructor: (@backgroundColor, @elements, @lights, @ambient, @indexOfRefraction) ->
@@ -26,7 +26,7 @@ class @World
       h = element.hit(ray)
       if temp is null
         temp = h
-      if temp isnt null and h isnt null and temp.t > h.t
+      if temp and h and temp.t > h.t
         temp = h
     temp
 
@@ -36,12 +36,12 @@ class @Hit
 class @Tracer
   @maxDepth: 6
   constructor: (@world) ->
-    @recursionCounter = @maxDepth
+    @recursionCounter = Tracer.maxDepth
   colorFor: (ray) =>
     @recursionCounter--
     if @recursionCounter > 0
       hit = @world.hit ray
-      if hit isnt null
+      if hit
         color = hit.geo.material.colorFor(hit, @world, this)
         @recursionCounter = maxDepth
         color
@@ -52,7 +52,7 @@ class @Node extends Geometry
   constructor: (@transformation, @geometries, material) ->
     super material
   hit: (ray) =>
-    r = new Ray(@transformation.i.x(ray.o), @transformation.i.x(ray.d))
+    r = new Ray(@transformation.i.xPoint(ray.o), @transformation.i.xVector(ray.d))
     temp = null
     for element in @geometries
       h = element.hit(r)
