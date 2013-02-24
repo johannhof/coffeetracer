@@ -1,6 +1,7 @@
 body, html {
     width: 100%;
     height: 100%;
+    font-family: 'Raleway', sans-serif;
 }
 
 body {
@@ -33,16 +34,16 @@ body {
 }
 
 #wrapper {
-    background: rgb(219,219,219); /* Old browsers */
-    background: -moz-linear-gradient(top,  rgba(219,219,219,1) 0%, rgba(229,229,229,1) 100%); /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(219,219,219,1)), color-stop(100%,rgba(229,229,229,1))); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(top,  rgba(219,219,219,1) 0%,rgba(229,229,229,1) 100%); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(top,  rgba(219,219,219,1) 0%,rgba(229,229,229,1) 100%); /* Opera 11.10+ */
-    background: -ms-linear-gradient(top,  rgba(219,219,219,1) 0%,rgba(229,229,229,1) 100%); /* IE10+ */
-    background: linear-gradient(to bottom,  rgba(219,219,219,1) 0%,rgba(229,229,229,1) 100%); /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#dbdbdb', endColorstr='#e5e5e5',GradientType=0 ); /* IE6-9 */
+    background: rgb(219, 219, 219); /* Old browsers */
+    background: -moz-linear-gradient(top, rgba(219, 219, 219, 1) 0%, rgba(229, 229, 229, 1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(219, 219, 219, 1)), color-stop(100%, rgba(229, 229, 229, 1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, rgba(219, 219, 219, 1) 0%, rgba(229, 229, 229, 1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, rgba(219, 219, 219, 1) 0%, rgba(229, 229, 229, 1) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, rgba(219, 219, 219, 1) 0%, rgba(229, 229, 229, 1) 100%); /* IE10+ */
+    background: linear-gradient(to bottom, rgba(219, 219, 219, 1) 0%, rgba(229, 229, 229, 1) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr = '#dbdbdb', endColorstr = '#e5e5e5', GradientType = 0); /* IE6-9 */
     padding-bottom: 100px; /* height of footer */
-    min-height: 89%;
+    min-height: 88%;
     position: relative;
 }
 
@@ -58,11 +59,31 @@ header {
     padding: 20px;
 }
 
+input {
+    text-align: center;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    border: 1px solid gray;
+}
+
+.redInput {
+    background-color: #f08080;
+}
+
+.greenInput {
+    background-color: #90ee90;
+}
+
+.blueInput {
+    background-color: #add8e6;
+}
+
 h1 {
     float: left;
     margin: 0;
     text-shadow: 2px 1px 1px black;
-    font-family: 'Jacques Francois Shadow', cursive;
+    font-family: 'Raleway', sans-serif;
     color: white;
     font-size: 80px;
     font-weight: 200;
@@ -71,38 +92,49 @@ h1 {
 h2 {
     font-size: 32px;
     text-shadow: 1px 1px 1px grey;
-    font-family: 'Jacques Francois Shadow', cursive;
+    font-family: 'Raleway', sans-serif;
     margin: 0;
-    font-weight: 400;
+    font-weight: 200;
 }
 
-#mainDiv{
+#mainDiv {
+    padding: 30px;
 }
 
 #canvasDiv {
+    margin-right: 30px;
+    margin-bottom: 30px;
     background-color: #d3d3d3;
-    padding: 0;
-    margin: 30px;
+    padding-bottom: 5px;
     float: left;
-    box-shadow: 2px 2px 4px black;
+    box-shadow: 1px 1px 3px black;
+}
+
+.propertyContainer {
+    float: left;
+    width: 370px;
+    margin-right: 30px;
+}
+
+.propertyDiv {
+    padding: 10px;
+    min-width: 350px;
+    margin-bottom: 30px;
+    float: left;
+    box-shadow: 1px 1px 3px black;
+    background-color: white;
 }
 
 #worldDiv {
-    padding: 10px;
-    min-width: 350px;
-    margin: 30px;
-    float: left;
-    box-shadow: 2px 2px 4px black;
-    background-color: white;
+}
+
+#lightsDiv {
+}
+
+#objectsDiv {
 }
 
 #cameraDiv {
-    padding: 10px;
-    min-width: 350px;
-    margin: 30px;
-    float: left;
-    box-shadow: 2px 2px 4px black;
-    background-color: white;
 }
 
 footer {

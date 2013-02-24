@@ -4,7 +4,8 @@
     <title>Coffeescript Raytracer</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/font-awesome.min.css">
-    <link href='http://fonts.googleapis.com/css?family=Graduate|Oxygen:400,700,300|Scada:400italic,700italic,400,700|Keania+One|Jacques+Francois+Shadow' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Raleway:400,300,200,100,500,600,700,800,900' rel='stylesheet'
+          type='text/css'>
 </head>
 <body>
 <div id="loadDiv">
@@ -15,16 +16,36 @@
     </header>
     <div id="mainDiv" class="clearfix">
         <div id="canvasDiv">
-            <canvas id="mainCanvas" width="500" height="500"></canvas><br>
-            Size: <input type="text" id="widthInput" placeholder="Width" size="5">
-            x
-            <input type="text" id="heightInput" placeholder="Height" size="5">
+            <canvas id="mainCanvas" width="500" height="500"></canvas>
+            <br>
+            <label for="widthInput"><i class="icon-resize-horizontal"></i></label><input type="text" id="widthInput"
+                                                                                         placeholder="Width" value="500"
+                                                                                         size="4">
+            <label for="heightInput"><i class="icon-resize-vertical"></i></label><input type="text" id="heightInput"
+                                                                                        placeholder="Height" size="4"
+                                                                                        value="500">
         </div>
-        <div id="worldDiv">
-            <h2>World</h2>
+        <div class="propertyContainer">
+            <div class="propertyDiv" id="worldDiv">
+                <h2><i class="icon-globe"></i> World</h2>
+                Background: <input class="redInput" size="1"><input class="greenInput" size="1"><input class="blueInput"
+                                                                                                       size="1">
+                <br>
+                Index of Refraction: <input value="1" size="2">
+            </div>
+            <div class="propertyDiv" id="objectsDiv">
+                <h2><i class="icon-picture"></i> Objects</h2>
+            </div>
         </div>
-        <div id="cameraDiv">
-            <h2>Cameras</h2>
+        <div class="propertyContainer">
+            <div class="propertyDiv" id="lightsDiv">
+                <h2><i class="icon-lightbulb"></i> Lights</h2>
+                Ambient: <input class="redInput" size="1"><input class="greenInput" size="1"><input class="blueInput"
+                                                                                                    size="1">
+            </div>
+            <div class="propertyDiv" id="cameraDiv">
+                <h2><i class="icon-camera-retro"></i> Cameras</h2>
+            </div>
         </div>
     </div>
     <script src="lib/vectorlib.js"></script>
