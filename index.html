@@ -4,8 +4,7 @@
     <title>Coffeescript Raytracer</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/font-awesome.min.css">
-    <link href='http://fonts.googleapis.com/css?family=Fascinate+Inline|Russo+One|Montserrat+Subrayada:400,700'
-          rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Graduate|Oxygen:400,700,300|Scada:400italic,700italic,400,700|Keania+One|Jacques+Francois+Shadow' rel='stylesheet' type='text/css'>
 </head>
 <body>
 <div id="loadDiv">
@@ -16,13 +15,16 @@
     </header>
     <div id="mainDiv" class="clearfix">
         <div id="canvasDiv">
-            <canvas id="mainCanvas" width="500" height="500"></canvas>
-            <br>
-            Size: <input type="text" id="widthInput" placeholder="Width"> x <input type="text" id="heightInput"
-                                                                                   placeholder="Height">
+            <canvas id="mainCanvas" width="500" height="500"></canvas><br>
+            Size: <input type="text" id="widthInput" placeholder="Width" size="5">
+            x
+            <input type="text" id="heightInput" placeholder="Height" size="5">
         </div>
         <div id="worldDiv">
             <h2>World</h2>
+        </div>
+        <div id="cameraDiv">
+            <h2>Cameras</h2>
         </div>
     </div>
     <script src="lib/vectorlib.js"></script>
