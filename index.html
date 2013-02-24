@@ -2,16 +2,29 @@
 <html>
 <head>
     <title>Coffeescript Raytracer</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
     <link href='http://fonts.googleapis.com/css?family=Fascinate+Inline|Russo+One|Montserrat+Subrayada:400,700'
           rel='stylesheet' type='text/css'>
 </head>
 <body>
+<div id="loadDiv">
+    <i class="icon-cog icon-4x icon-spin"></i>
+</div>
 <div id="wrapper">
-    <header>Canvas Raytracer<img src="html5logo.png" width="229" height="64">
+    <header class="clearfix"><h1>Canvas Raytracer</h1><img src="images/html5logo.png" width="229" height="64">
     </header>
-    <canvas id="mainCanvas" width="500" height="500"></canvas>
-    <br>
+    <div id="mainDiv" class="clearfix">
+        <div id="canvasDiv">
+            <canvas id="mainCanvas" width="500" height="500"></canvas>
+            <br>
+            Size: <input type="text" id="widthInput" placeholder="Width"> x <input type="text" id="heightInput"
+                                                                                   placeholder="Height">
+        </div>
+        <div id="worldDiv">
+            <h2>World</h2>
+        </div>
+    </div>
     <script src="lib/vectorlib.js"></script>
     <script src="lib/cameras.js"></script>
     <script src="lib/lights.js"></script>
@@ -19,8 +32,10 @@
     <script src="lib/objects.js"></script>
     <script src="lib/util.js"></script>
     <script src="lib/main.js"></script>
-    <footer>By Johann Hofmann, written in <a href="http://coffeescript.org/">CoffeeScript</a>, compiled with <a
-            href="http://nodejs.org/">Node</a></footer>
+    <footer>
+        <a href="http://coffeescript.org/"><img src="images/coffescript-logo.png" width="190"></a>
+        <a href="http://nodejs.org/"><img src="images/nodelogo.png" width="160"></a>
+    </footer>
 </div>
 </body>
 </html>
