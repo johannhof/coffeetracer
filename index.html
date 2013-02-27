@@ -78,26 +78,29 @@
                 <h2><i class="icon-picture"></i> Objects
                     <select class="selectObject">
                         <option value="Node">Node</option>
-                        <option value="Box">Box</option>
                         <option value="Sphere">Sphere</option>
+                        <option value="Box">Box</option>
+                        <option value="Plane">Plane</option>
                         <option value="Triangle">Triangle</option>
                     </select>
                     <button class="addButton">Add</button>
                 </h2>
                 <div id="nodeHTMLExample" style="display: none;">
                     <div class="node">
-                        Node:
+                        <b>Node:</b>
+
                         <div class="nodeContainer">
-                            <b>Objects:</b>
+                            Objects:
                             <select class="nodeSelectObject">
                                 <option value="Node">Node</option>
-                                <option value="Box">Box</option>
                                 <option value="Sphere">Sphere</option>
+                                <option value="Box">Box</option>
+                                <option value="Plane">Plane</option>
                                 <option value="Triangle">Triangle</option>
                             </select>
                             <button class="nodeAddObjectButton">Add</button>
                             <br>
-                            <b>Transformations:</b>
+                            Transformations:
                             <select class="nodeSelectObject">
                                 <option value="Scaling">Scaling</option>
                                 <option value="Translation">Translation</option>
@@ -106,6 +109,58 @@
                                 <option value="Z-Rotation">Z-Rotation</option>
                             </select>
                             <button class="nodeAddObjectButton">Add</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="sphereHTMLExample" style="display: none;">
+                    <div class="sphere">
+                        <b>Sphere:</b> <select class="selectMaterial">
+                        <option value="SingleColorMaterial">SingleColorMaterial</option>
+                        <option value="LambertMaterial">LambertMaterial</option>
+                        <option value="PhongMaterial">PhongMaterial</option>
+                        <option value="ReflectiveMaterial">ReflectiveMaterial</option>
+                        <option value="TransparentMaterial">TransparentMaterial</option>
+                    </select>
+
+                        <div class="objectContainer">
+                            Center: x=<input class="sphereCenterX" value="0" size="1"> y=<input class="sphereCenterY"
+                                                                                                value="0" size="1">
+                            z=<input class="sphereCenterZ" value="0" size="1">
+                            <br>Radius: <input class="sphereRadius" value="1" size="1">
+                        </div>
+                        <div class="materialContainer">
+                            Color: <input class="redInput" size="1" value="0.3"><input class="greenInput" size="1"
+                                                                                       value="0.3"><input
+                                class="blueInput"
+                                size="1"
+                                value="0.3">
+                        </div>
+                    </div>
+                </div>
+                <div id="boxHTMLExample" style="display: none;">
+                    <div class="box">
+                        <b>Box:</b> <select class="selectMaterial">
+                        <option value="SingleColorMaterial">SingleColorMaterial</option>
+                        <option value="LambertMaterial">LambertMaterial</option>
+                        <option value="PhongMaterial">PhongMaterial</option>
+                        <option value="ReflectiveMaterial">ReflectiveMaterial</option>
+                        <option value="TransparentMaterial">TransparentMaterial</option>
+                    </select>
+
+                        <div class="objectContainer">
+                            lbf: x=<input class="boxLBFX" value="0" size="1"> y=<input class="boxLBFY" value="0"
+                                                                                       size="1"> z=<input
+                                class="boxLBFZ" value="0" size="1">
+                            <br>run: x=<input class="boxRUNX" value="0" size="1"> y=<input class="boxRUNY" value="0"
+                                                                                           size="1"> z=<input
+                                class="boxRUNZ" value="0" size="1">
+                        </div>
+                        <div class="materialContainer">
+                            Color: <input class="redInput" size="1" value="0.3"><input class="greenInput" size="1"
+                                                                                       value="0.3"><input
+                                class="blueInput"
+                                size="1"
+                                value="0.3">
                         </div>
                     </div>
                 </div>

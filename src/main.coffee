@@ -1,6 +1,8 @@
 $ = jQuery
 $ ->
   nodeHTML = $("#nodeHTMLExample").html()
+  sphereHTML = $("#sphereHTMLExample").html()
+  boxHTML = $("#boxHTMLExample").html()
   $("#goButton").click ->
     parseData()
     render()
@@ -9,7 +11,10 @@ $ ->
   getObjectType = (className) ->
     switch className
       when "Node" then return nodeHTML
-      else "Fail"
+      when "Sphere" then return sphereHTML
+      when "Box" then return boxHTML
+      else
+        "Fail"
   canvas = document.getElementById "mainCanvas"
   ctx = canvas.getContext "2d"
   ctx.fillStyle = "white"

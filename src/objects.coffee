@@ -2,19 +2,15 @@ class @Geometry
   constructor: (@material) ->
 
 class @Plane extends Geometry
-  constructor: (material) ->
+  constructor: (material, @a = new Point3(0, 0, 0), @n = new Normal3(0, 1, 0)) ->
     super material
-    @a = new Point3(0, 0, 0)
-    @n = new Normal3(0, 1, 0)
   hit: (ray) =>
     t = @a.subPoint(ray.o).dot(@n) / ray.d.dot(@n)
     if t > epsilon new Hit(t, ray, this, @n) else null
 
 class @AxisAlignedBox extends Geometry
-  constructor: (material) ->
+  constructor: (material, @lbf = new Point3(-0.5, -0.5, -0.5), @run = new Point3(0.5, 0.5, 0.5)) ->
     super material
-    @lbf = new Point3(-0.5, -0.5, -0.5)
-    @run = new Point3(0.5, 0.5, 0.5)
   hit: (ray) =>
     a = 1.0 / ray.d.x
     if a >= epsilon
@@ -74,10 +70,8 @@ class @AxisAlignedBox extends Geometry
     null
 
 class @Sphere extends Geometry
-  constructor: (material) ->
+  constructor: (material, @c = new Point3(0, 0, 0), @r = 1) ->
     super material
-    @c = new Point3(0, 0, 0)
-    @r = 1
   hit: (ray) =>
     a = ray.d.dot(ray.d)
     b = ray.d.dot((ray.o.subPoint(@c)).mul(2));
