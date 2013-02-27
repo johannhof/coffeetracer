@@ -1,10 +1,17 @@
 $ = jQuery
 $ ->
+  nodeHTML = $("#nodeHTMLExample").html()
   $("#goButton").click ->
     parseData()
     render()
-  canvas = document.getElementById("mainCanvas")
-  ctx = canvas.getContext("2d")
+  $("#objectsDiv .addButton").click ->
+    $(this).parent().parent().append(getObjectType($(this).parent().children(".selectObject").val()))
+  getObjectType = (className) ->
+    switch className
+      when "Node" then return nodeHTML
+      else "Fail"
+  canvas = document.getElementById "mainCanvas"
+  ctx = canvas.getContext "2d"
   ctx.fillStyle = "white"
   width = canvas.width
   height = canvas.height

@@ -47,13 +47,17 @@
                     </select>
                     <button class="addButton">Add</button>
                 </h2>
-                <span class="ambientLight"><input class="lightCheck" type="checkbox"> Ambient: <input class="redInput" size="1" value="0.3"><input class="greenInput" size="1"
-                                                                             value="0.3"><input class="blueInput"
-                                                                                                size="1" value="0.3"></span>
-                <br><span class="pointLight"><input class="lightCheck" type="checkbox"> PointLight: <br><input class="redInput" size="1" value="0.3"><input class="greenInput" size="1"
-                                                                                   value="0.3"><input class="blueInput"
+                <span class="ambientLight"><input class="lightCheck" type="checkbox"> Ambient: <input class="redInput"
                                                                                                       size="1"
-                                                                                                      value="0.3"></span>
+                                                                                                      value="0.3"><input
+                        class="greenInput" size="1"
+                        value="0.3"><input class="blueInput"
+                                           size="1" value="0.3"></span>
+                <br><span class="pointLight"><input class="lightCheck" type="checkbox"> PointLight: <input
+                    class="redInput" size="1" value="0.3"><input class="greenInput" size="1"
+                                                                 value="0.3"><input class="blueInput"
+                                                                                    size="1"
+                                                                                    value="0.3"></span>
             </div>
         </div>
         <div class="propertyContainer">
@@ -72,7 +76,7 @@
             </div>
             <div class="propertyDiv" id="objectsDiv">
                 <h2><i class="icon-picture"></i> Objects
-                    <select>
+                    <select class="selectObject">
                         <option value="Node">Node</option>
                         <option value="Box">Box</option>
                         <option value="Sphere">Sphere</option>
@@ -80,6 +84,31 @@
                     </select>
                     <button class="addButton">Add</button>
                 </h2>
+                <div id="nodeHTMLExample" style="display: none;">
+                    <div class="node">
+                        Node:
+                        <div class="nodeContainer">
+                            <b>Objects:</b>
+                            <select class="nodeSelectObject">
+                                <option value="Node">Node</option>
+                                <option value="Box">Box</option>
+                                <option value="Sphere">Sphere</option>
+                                <option value="Triangle">Triangle</option>
+                            </select>
+                            <button class="nodeAddObjectButton">Add</button>
+                            <br>
+                            <b>Transformations:</b>
+                            <select class="nodeSelectObject">
+                                <option value="Scaling">Scaling</option>
+                                <option value="Translation">Translation</option>
+                                <option value="X-Rotation">X-Rotation</option>
+                                <option value="Y-Rotation">Y-Rotation</option>
+                                <option value="Z-Rotation">Z-Rotation</option>
+                            </select>
+                            <button class="nodeAddObjectButton">Add</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

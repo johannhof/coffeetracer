@@ -221,9 +221,8 @@ h2 {
 
 .propertyDiv {
     font-size: 14px;
-    text-align: center;
     padding: 10px;
-    min-width: 350px;
+    min-width: 250px;
     margin-bottom: 20px;
     float: left;
     box-shadow: 1px 1px 3px black;
@@ -241,6 +240,14 @@ h2 {
 }
 
 #cameraDiv {
+}
+
+.nodeContainer{
+    margin-left: 20px;
+}
+
+.materialContainer{
+    margin-left: 20px;
 }
 
 footer {
