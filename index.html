@@ -18,12 +18,10 @@
         <div id="canvasDiv">
             <canvas id="mainCanvas" width="500" height="500"></canvas>
             <br>
-            <label for="widthInput"><i class="icon-resize-horizontal"></i></label><input type="text" id="widthInput"
-                                                                                         placeholder="Width" value="500"
-                                                                                         size="4">
-            <label for="heightInput"><i class="icon-resize-vertical"></i></label><input type="text" id="heightInput"
-                                                                                        placeholder="Height" size="4"
-                                                                                        value="500">
+            <label for="widthInput"><i class="icon-resize-horizontal"></i></label>
+            <input type="text" id="widthInput" placeholder="Width" value="500" size="4">
+            <label for="heightInput"><i class="icon-resize-vertical"></i></label>
+            <input type="text" id="heightInput" placeholder="Height" size="4" value="500">
             <br>
             <br>
             <button id="revertButton"><i class="icon-reply"></i> Revert Changes</button>
@@ -32,14 +30,16 @@
         <div class="propertyContainer">
             <div class="propertyDiv" id="worldDiv">
                 <h2><i class="icon-globe"></i> World</h2>
-                Background: <input class="redInput" size="1" value="0"><input class="greenInput" size="1"
-                                                                              value="0"><input class="blueInput"
-                                                                                               size="1" value="0">
+                Background:
+                <input class="redInput" size="1" value="0">
+                <input class="greenInput" size="1" value="0">
+                <input class="blueInput" size="1" value="0">
                 <br>
                 Index of Refraction: <input value="1" size="2">
             </div>
             <div class="propertyDiv" id="lightsDiv">
-                <h2><i class="icon-lightbulb"></i> Lights
+                <h2>
+                    <i class="icon-lightbulb"></i> Lights
                     <select>
                         <option value="PointLight">PointLight</option>
                         <option value="SpotLight">SpotLight</option>
@@ -47,23 +47,25 @@
                     </select>
                     <button class="addButton">Add</button>
                 </h2>
-                <span class="ambientLight"><input class="lightCheck" type="checkbox"> Ambient: <input class="redInput"
-                                                                                                      size="1"
-                                                                                                      value="0.3"><input
-                        class="greenInput" size="1"
-                        value="0.3"><input class="blueInput"
-                                           size="1" value="0.3"></span>
-                <br><span class="pointLight"><input class="lightCheck" type="checkbox"> PointLight: <input
-                    class="redInput" size="1" value="0.3"><input class="greenInput" size="1"
-                                                                 value="0.3"><input class="blueInput"
-                                                                                    size="1"
-                                                                                    value="0.3"></span>
+                <div class="ambientLight">
+                    <input class="lightCheck" type="checkbox">
+                    Ambient:
+                    <input class="redInput" size="1" value="0.3">
+                    <input class="greenInput" size="1" value="0.3">
+                    <input class="blueInput" size="1" value="0.3">
+                </div>
+                <div class="pointLight">
+                    <input class="lightCheck" type="checkbox">
+                    PointLight:
+                    <input class="redInput" size="1" value="0.3">
+                    <input class="greenInput" size="1" value="0.3">
+                    <input class="blueInput" size="1" value="0.3">
+                </div>
             </div>
         </div>
         <div class="propertyContainer">
             <div class="propertyDiv" id="cameraDiv">
-                <h2><i class="icon-camera-retro"></i> Camera
-                </h2>
+                <h2><i class="icon-camera-retro"></i> Camera</h2>
                 <select>
                     <option value="PointLight">Perspective Camera</option>
                     <option value="SpotLight">Orthographic Camera</option>
@@ -75,7 +77,8 @@
                 <br>alpha = PI / <input id="camera_alpha" value="1" size="2">
             </div>
             <div class="propertyDiv" id="objectsDiv">
-                <h2><i class="icon-picture"></i> Objects
+                <h2>
+                    <i class="icon-picture"></i> Objects
                     <select class="selectObject">
                         <option value="Node">Node</option>
                         <option value="Sphere">Sphere</option>
@@ -114,53 +117,84 @@
                 </div>
                 <div id="sphereHTMLExample" style="display: none;">
                     <div class="sphere">
-                        <b>Sphere:</b> <select class="selectMaterial">
-                        <option value="SingleColorMaterial">SingleColorMaterial</option>
-                        <option value="LambertMaterial">LambertMaterial</option>
-                        <option value="PhongMaterial">PhongMaterial</option>
-                        <option value="ReflectiveMaterial">ReflectiveMaterial</option>
-                        <option value="TransparentMaterial">TransparentMaterial</option>
-                    </select>
+                        <b>Sphere:</b>
+                        <select class="selectMaterial">
+                            <option value="SingleColorMaterial">SingleColorMaterial</option>
+                            <option value="LambertMaterial">LambertMaterial</option>
+                            <option value="PhongMaterial">PhongMaterial</option>
+                            <option value="ReflectiveMaterial">ReflectiveMaterial</option>
+                            <option value="TransparentMaterial">TransparentMaterial</option>
+                        </select>
 
                         <div class="objectContainer">
-                            Center: x=<input class="sphereCenterX" value="0" size="1"> y=<input class="sphereCenterY"
-                                                                                                value="0" size="1">
+                            Center:
+                            x=<input class="sphereCenterX" value="0" size="1">
+                            y=<input class="sphereCenterY" value="0" size="1">
                             z=<input class="sphereCenterZ" value="0" size="1">
                             <br>Radius: <input class="sphereRadius" value="1" size="1">
                         </div>
                         <div class="materialContainer">
-                            Color: <input class="redInput" size="1" value="0.3"><input class="greenInput" size="1"
-                                                                                       value="0.3"><input
-                                class="blueInput"
-                                size="1"
-                                value="0.3">
+                            Color:
+                            <input class="redInput" size="1" value="0.3">
+                            <input class="greenInput" size="1" value="0.3">
+                            <input class="blueInput" size="1" value="0.3">
                         </div>
                     </div>
                 </div>
                 <div id="boxHTMLExample" style="display: none;">
                     <div class="box">
-                        <b>Box:</b> <select class="selectMaterial">
-                        <option value="SingleColorMaterial">SingleColorMaterial</option>
-                        <option value="LambertMaterial">LambertMaterial</option>
-                        <option value="PhongMaterial">PhongMaterial</option>
-                        <option value="ReflectiveMaterial">ReflectiveMaterial</option>
-                        <option value="TransparentMaterial">TransparentMaterial</option>
-                    </select>
+                        <b>Box:</b>
+                        <select class="selectMaterial">
+                            <option value="SingleColorMaterial">SingleColorMaterial</option>
+                            <option value="LambertMaterial">LambertMaterial</option>
+                            <option value="PhongMaterial">PhongMaterial</option>
+                            <option value="ReflectiveMaterial">ReflectiveMaterial</option>
+                            <option value="TransparentMaterial">TransparentMaterial</option>
+                        </select>
 
                         <div class="objectContainer">
-                            lbf: x=<input class="boxLBFX" value="0" size="1"> y=<input class="boxLBFY" value="0"
-                                                                                       size="1"> z=<input
-                                class="boxLBFZ" value="0" size="1">
-                            <br>run: x=<input class="boxRUNX" value="0" size="1"> y=<input class="boxRUNY" value="0"
-                                                                                           size="1"> z=<input
-                                class="boxRUNZ" value="0" size="1">
+                            lbf:
+                            <label>x=<input class="boxLBFX" value="0" size="1"></label>
+                            <label>y=<input class="boxLBFY" value="0" size="1"></label>
+                            z=<input class="boxLBFZ" value="0" size="1">
+                            <br>run:
+                            x=<input class="boxRUNX" value="0" size="1">
+                            y=<input class="boxRUNY" value="0" size="1">
+                            z=<input class="boxRUNZ" value="0" size="1">
                         </div>
                         <div class="materialContainer">
-                            Color: <input class="redInput" size="1" value="0.3"><input class="greenInput" size="1"
-                                                                                       value="0.3"><input
-                                class="blueInput"
-                                size="1"
-                                value="0.3">
+                            Color:
+                            <input class="redInput" size="1" value="0.3">
+                            <input class="greenInput" size="1" value="0.3">
+                            <input class="blueInput" size="1" value="0.3">
+                        </div>
+                    </div>
+                </div>
+                <div id="planeHTMLExample" style="display: none;">
+                    <div class="plane">
+                        <b>Plane:</b>
+                        <select class="selectMaterial">
+                            <option value="SingleColorMaterial">SingleColorMaterial</option>
+                            <option value="LambertMaterial">LambertMaterial</option>
+                            <option value="PhongMaterial">PhongMaterial</option>
+                            <option value="ReflectiveMaterial">ReflectiveMaterial</option>
+                            <option value="TransparentMaterial">TransparentMaterial</option>
+                        </select>
+
+                        <div class="objectContainer">
+                            a: x=<input class="planeAX" value="0" size="1">
+                            y=<input class="planeAY" value="0" size="1">
+                            z=<input class="planeAZ" value="0" size="1">
+                            <br>n:
+                            x=<input class="planeNX" value="0" size="1">
+                            y=<input class="planeNY" value="0" size="1">
+                            z=<input class="planeNZ" value="0" size="1">
+                        </div>
+                        <div class="materialContainer">
+                            Color:
+                            <input class="redInput" size="1" value="0.3">
+                            <input class="greenInput" size="1" value="0.3">
+                            <input class="blueInput" size="1" value="0.3">
                         </div>
                     </div>
                 </div>

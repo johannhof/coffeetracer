@@ -1,20 +1,31 @@
 $ = jQuery
 $ ->
+  #######Objects#######
   nodeHTML = $("#nodeHTMLExample").html()
   sphereHTML = $("#sphereHTMLExample").html()
   boxHTML = $("#boxHTMLExample").html()
-  $("#goButton").click ->
-    parseData()
-    render()
+  planeHTML = $('#planeHTMLExample').html();
   $("#objectsDiv .addButton").click ->
-    $(this).parent().parent().append(getObjectType($(this).parent().children(".selectObject").val()))
-  getObjectType = (className) ->
+    temp = $(this).parent().parent().append(getObjectHTML($(this).parent().children(".selectObject").val()))
+    console.log temp.children()
+  getObjectHTML = (className) ->
     switch className
       when "Node" then return nodeHTML
       when "Sphere" then return sphereHTML
       when "Box" then return boxHTML
+      when "Plane" then return planeHTML
       else
         "Fail"
+
+  #######Lights#######
+  getLightHTML = (lightName) ->
+    switch lightName
+      when "Test" then "Fail"
+
+  #######Canvas Setup########
+  $("#goButton").click ->
+    parseData()
+    render()
   canvas = document.getElementById "mainCanvas"
   ctx = canvas.getContext "2d"
   ctx.fillStyle = "white"
@@ -22,20 +33,14 @@ $ ->
   height = canvas.height
   ctx.fillRect(0, 0, width, height)
   imgData = ctx.getImageData(0, 0, width, height)
-  lights = [new PointLight(new Color(1, 1, 1), false, new Point3(0, 6, 6))]
-  objects = [new Node(Transform.Scaling(1, 1, 1), [new Sphere(new PhongMaterial(new Color(1, 0, 0), new Color(1, 1, 1), 20))], null)]
-  cam = new PerspectiveCamera(new Point3(5, 5, 5), new Vector3(-1, -1, -1), new Vector3(0, 1, 0), Math.PI / 4)
-  world = new World(new Color(0, 0, 0), objects, lights, new Color(0.1, 0.1, 0.1), 1)
-  parseData = ->
-    lights = parseLights()
+
+  #######Parsing#######
+  parseData = do ->
+    lights = []
     objects = [new Node(Transform.Scaling(1, 1, 1), [new Sphere(new PhongMaterial(new Color(1, 0, 0), new Color(1, 1, 1), 20))], null)]
     cam = new PerspectiveCamera(new Point3(5, 5, 5), new Vector3(-1, -1, -1), new Vector3(0, 1, 0), Math.PI / 4)
     world = new World(new Color(0, 0, 0), objects, lights, new Color(0.1, 0.1, 0.1), 1)
-  parseLights = ->
-    lights = []
-    #$(lightsDiv)
-    lights
-  render = ->
+  render = do ->
     tracer = new Tracer(world)
     for x in [0..width] by 1
       for y in [0..height] by 1
@@ -44,5 +49,4 @@ $ ->
         imgData.data[(x * height + y) * 4 + 1] = c.g * 255.0
         imgData.data[(x * height + y) * 4 + 2] = c.b * 255.0
     ctx.putImageData(imgData, 0, 0)
-  #document.getElementById("loadDiv").style.display = "none"
-  render()
+#document.getElementById("loadDiv").style.display = "none"
