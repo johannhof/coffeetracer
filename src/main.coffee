@@ -4,28 +4,29 @@ $ ->
   nodeHTML = $("#nodeHTMLExample").html()
   sphereHTML = $("#sphereHTMLExample").html()
   boxHTML = $("#boxHTMLExample").html()
-  planeHTML = $('#planeHTMLExample').html();
+  planeHTML = $('#planeHTMLExample').html()
   $("#objectsDiv .addButton").click ->
     temp = $(this).parent().parent().append(getObjectHTML($(this).parent().children(".selectObject").val()))
-    console.log temp.children()
   getObjectHTML = (className) ->
     switch className
       when "Node" then return nodeHTML
       when "Sphere" then return sphereHTML
       when "Box" then return boxHTML
       when "Plane" then return planeHTML
-      else
-        "Fail"
 
   #######Lights#######
+  pointLightHTML = $("#pointLightExample").html()
+  spotLightHTML = $("#spotLightExample").html()
+  directionalLightHTML = $("#directionalLightExample").html()
+  $("#lightsDiv .addButton").click ->
+    temp = $(this).parent().parent().append(getLightHTML($(this).parent().children(".selectLight").val()))
   getLightHTML = (lightName) ->
     switch lightName
-      when "Test" then "Fail"
+      when "PointLight" then pointLightHTML
+      when "SpotLight" then spotLightHTML
+      when "DirectionalLight" then directionalLightHTML
 
   #######Canvas Setup########
-  $("#goButton").click ->
-    parseData()
-    render()
   canvas = document.getElementById "mainCanvas"
   ctx = canvas.getContext "2d"
   ctx.fillStyle = "white"
@@ -35,12 +36,36 @@ $ ->
   imgData = ctx.getImageData(0, 0, width, height)
 
   #######Parsing#######
-  parseData = do ->
-    lights = []
+  cam = null;
+  world = null;
+  parseAmbientLight = ->
+    ambientDiv = $("#ambientLight")
+    new Color(parseFloat($(ambientDiv).children(".redInput").val()), parseFloat($(ambientDiv).children(".greenInput").val()), parseFloat($(ambientDiv).children(".blueInput").val()))
+
+  parseBackgroundColor = ->
+    worldDiv = $("#worldDiv")
+    new Color(parseFloat($(worldDiv).children(".redInput").val()), parseFloat($(worldDiv).children(".greenInput").val()), parseFloat($(worldDiv).children(".blueInput").val()))
+
+  parseLights = ->
+    lightDivs = $("#lightsDiv").children("div")
+    lights = (parseLightDiv lightDiv for lightDiv in lightDivs when $(lightDiv).children(".lightCheck").is ":checked")
+    lights
+
+  parseLightDiv = (lightDiv) ->
+    lightClass = $(lightDiv).attr "class"
+    color = new Color(parseFloat($(lightDiv).children(".redInput").val()), parseFloat($(lightDiv).children(".greenInput").val()), parseFloat($(lightDiv).children(".blueInput").val()))
+    shadows = $(lightDiv).children(".lightCheck").is ":checked"
+    position = new Point3(parseFloat($(lightDiv).children(".posX").val()), parseFloat($(lightDiv).children(".posY").val()), parseFloat($(lightDiv).children(".posZ").val()))
+    if lightClass is "pointLight" then return new PointLight(color, shadows, position)
+    direction = new Vector3(parseFloat($(lightDiv).children(".dirX").val()), parseFloat($(lightDiv).children(".dirY").val()), parseFloat($(lightDiv).children(".dirZ").val()))
+    if lightClass is "directionalLight" then return new DirectionalLight(color, shadows, direction)
+    new SpotLight(color, shadows, position, direction, Math.PI / parseFloat($(lightDiv).children(".halfAngle").val()))
+
+  parseData = ->
     objects = [new Node(Transform.Scaling(1, 1, 1), [new Sphere(new PhongMaterial(new Color(1, 0, 0), new Color(1, 1, 1), 20))], null)]
     cam = new PerspectiveCamera(new Point3(5, 5, 5), new Vector3(-1, -1, -1), new Vector3(0, 1, 0), Math.PI / 4)
-    world = new World(new Color(0, 0, 0), objects, lights, new Color(0.1, 0.1, 0.1), 1)
-  render = do ->
+    world = new World(parseBackgroundColor(), objects, parseLights(), parseAmbientLight(), parseFloat($("#worldDiv").children(".indexOfRefraction").val()))
+  render = ->
     tracer = new Tracer(world)
     for x in [0..width] by 1
       for y in [0..height] by 1
@@ -49,4 +74,7 @@ $ ->
         imgData.data[(x * height + y) * 4 + 1] = c.g * 255.0
         imgData.data[(x * height + y) * 4 + 2] = c.b * 255.0
     ctx.putImageData(imgData, 0, 0)
-#document.getElementById("loadDiv").style.display = "none"
+
+  $("#goButton").click ->
+    parseData()
+    render()

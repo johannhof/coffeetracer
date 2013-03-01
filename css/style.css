@@ -131,7 +131,7 @@ h2 {
     color: white;
     border: none;
     box-shadow: 0px 1px 2px green;
-    text-shadow: 1px 1px 2px black;
+    text-shadow: 0.5px -1px 1px black;
     font-size: 17px;
     padding: 12px;
     cursor: pointer;
@@ -240,6 +240,11 @@ h2 {
 }
 
 #cameraDiv {
+    text-align: center;
+}
+
+#cameraDiv h2 {
+    text-align: left;
 }
 
 .nodeContainer {
