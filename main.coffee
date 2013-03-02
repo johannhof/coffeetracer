@@ -1,5 +1,16 @@
 $ = jQuery
 $ ->
+  worker = new Worker('engine.js');
+
+  worker.addEventListener('message',
+  ((e) ->
+    console.log(e.data)
+    data = JSON.parse(e.data)
+    for x in data
+      imgData.data[data.indexOf(x)] = x
+    ctx.putImageData(imgData,0,0)
+  ), false)
+
   #######Objects#######
   nodeHTML = $("#nodeHTMLExample").html()
   sphereHTML = $("#sphereHTMLExample").html()
@@ -65,16 +76,13 @@ $ ->
     objects = [new Node(Transform.Scaling(1, 1, 1), [new Sphere(new PhongMaterial(new Color(1, 0, 0), new Color(1, 1, 1), 20))], null)]
     cam = new PerspectiveCamera(new Point3(5, 5, 5), new Vector3(-1, -1, -1), new Vector3(0, 1, 0), Math.PI / 4)
     world = new World(parseBackgroundColor(), objects, parseLights(), parseAmbientLight(), parseFloat($("#worldDiv").children(".indexOfRefraction").val()))
-  render = ->
-    tracer = new Tracer(world)
-    for x in [0..width] by 1
-      for y in [0..height] by 1
-        c = tracer.colorFor((cam.rayFor(width, height, x, y)))
-        imgData.data[(x * height + y) * 4 + 0] = c.r * 255.0
-        imgData.data[(x * height + y) * 4 + 1] = c.g * 255.0
-        imgData.data[(x * height + y) * 4 + 2] = c.b * 255.0
-    ctx.putImageData(imgData, 0, 0)
 
   $("#goButton").click ->
     parseData()
-    render()
+    setup = {
+    cam: cam
+    world: world
+    width: width
+    height: height
+    }
+    worker.postMessage(JSON.stringify(setup))
