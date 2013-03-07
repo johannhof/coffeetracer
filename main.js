@@ -5,18 +5,7 @@
   $ = jQuery;
 
   $(function() {
-    var boxHTML, cam, canvas, ctx, directionalLightHTML, getLightHTML, getObjectHTML, height, imgData, nodeHTML, parseAmbientLight, parseBackgroundColor, parseData, parseLightDiv, parseLights, planeHTML, pointLightHTML, sphereHTML, spotLightHTML, width, worker, world;
-    worker = new Worker('engine.js');
-    worker.addEventListener('message', (function(e) {
-      var data, x, _i, _len;
-      console.log(e.data);
-      data = JSON.parse(e.data);
-      for (_i = 0, _len = data.length; _i < _len; _i++) {
-        x = data[_i];
-        imgData.data[data.indexOf(x)] = x;
-      }
-      return ctx.putImageData(imgData, 0, 0);
-    }), false);
+    var boxHTML, cam, canvas, ctx, directionalLightHTML, getLightHTML, getObjectHTML, height, imgData, nodeHTML, parseAmbientLight, parseBackgroundColor, parseData, parseLightDiv, parseLights, planeHTML, pointLightHTML, render, sphereHTML, spotLightHTML, width, world;
     nodeHTML = $("#nodeHTMLExample").html();
     sphereHTML = $("#sphereHTMLExample").html();
     boxHTML = $("#boxHTMLExample").html();
@@ -110,16 +99,22 @@
       cam = new PerspectiveCamera(new Point3(5, 5, 5), new Vector3(-1, -1, -1), new Vector3(0, 1, 0), Math.PI / 4);
       return world = new World(parseBackgroundColor(), objects, parseLights(), parseAmbientLight(), parseFloat($("#worldDiv").children(".indexOfRefraction").val()));
     };
+    render = function() {
+      var c, tracer, x, y, _i, _j;
+      tracer = new Tracer(world);
+      for (x = _i = 0; _i <= width; x = _i += 1) {
+        for (y = _j = 0; _j <= height; y = _j += 1) {
+          c = tracer.colorFor(cam.rayFor(width, height, x, y));
+          imgData.data[(x * height + height - y - 1) * 4 + 0] = c.r * 255.0;
+          imgData.data[(x * height + height - y - 1) * 4 + 1] = c.g * 255.0;
+          imgData.data[(x * height + height - y - 1) * 4 + 2] = c.b * 255.0;
+        }
+      }
+      return ctx.putImageData(imgData, 0, 0);
+    };
     return $("#goButton").click(function() {
-      var setup;
       parseData();
-      setup = {
-        cam: cam,
-        world: world,
-        width: width,
-        height: height
-      };
-      return worker.postMessage(JSON.stringify(setup));
+      return render();
     });
   });
 

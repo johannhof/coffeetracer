@@ -2,13 +2,13 @@ class @DirectionalLight
   constructor: (@color, @castsShadows, @direction) ->
   illuminates: (point, world) ->
     if not @castsShadows then return true
-    ray = new Ray(point.subVector(@direction.normalized().mul(50)), @direction.normalized())
+    ray = new Ray(new Point3(@direction.x,@direction.y,@direction.z), @direction.normalized())
     hit = world.hit(ray)
     if not hit or Math.round(hit.t * 100000.0) / 100000.0 >= Math.round(ray.tOf(point) * 100000) / 100000.0
       return true
     false
   directionFrom: (point) ->
-    @direction.mul(-1)
+    @direction.normalized()
 
 class @PointLight
   constructor: (@color, @castsShadows, @position) ->
