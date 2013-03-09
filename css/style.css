@@ -17,20 +17,22 @@ body {
 }
 
 #loadDiv {
-    display: none;
     text-align: center;
     z-index: 999;
-    left: 42.5%;
-    top: 50%;
-    position: fixed;
-    padding: 10px 20px;
-    min-height: 5%;
-    min-width: 150px;
+    position: absolute;
+    width: 100%;
+    height: 100%;
     color: white;
-    font-size: 24px;
+    font-size: 36px;
     box-shadow: 1px 1px 1px black;
     font-family: Arial, sans-serif;
-    background-color: gray;
+    background-color: rgba(0,0,0,0.5);
+}
+
+#loadDiv i{
+    position: absolute;
+    left: 40%;
+    top: 30%;
 }
 
 #wrapper {
@@ -101,6 +103,7 @@ h2 {
 }
 
 #canvasDiv {
+    position: relative;
     margin-right: 30px;
     margin-bottom: 30px;
     background-color: #d3d3d3;
@@ -281,7 +284,7 @@ footer {
 }
 
 footer img {
-    margin-right: 50px;
+    margin-right: 40px;
 }
 
 .clearfix:before, .clearfix:after {
