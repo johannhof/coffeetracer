@@ -5,7 +5,7 @@
   $ = jQuery;
 
   $(function() {
-    var boxHTML, cam, canvas, ctx, directionalLightHTML, extractImageData, getLightHTML, getObjectHTML, height, imgData, nodeHTML, numberOfFinishedWorkers, parseAmbientLight, parseBackgroundColor, parseCameraDiv, parseData, parseLightDiv, parseLights, planeHTML, pointLightHTML, render, sphereHTML, spotLightHTML, startWorker, width, world;
+    var boxHTML, cam, canvas, ctx, directionalLightHTML, extractImageData, getLightHTML, getObjectHTML, height, imgData, nodeHTML, numberOfFinishedWorkers, parseAmbientLight, parseBackgroundColor, parseCameraDiv, parseData, parseLightDiv, parseLights, planeHTML, pointLightHTML, render, sphereHTML, spotLightHTML, startTime, startWorker, width, world;
     $("#loadDiv").toggle();
     nodeHTML = $("#nodeHTMLExample").html();
     sphereHTML = $("#sphereHTMLExample").html();
@@ -48,9 +48,9 @@
     };
     $("#selectCamera").change(function() {
       if (this.value === "PerspectiveCamera") {
-        return $("#cameraSpec").html('<label for="camera_alpha">alpha = PI / </label><input id="camera_alpha" value="1" size="2">');
+        return $("#cameraSpec").html('<label for="camera_alpha">alpha = PI / </label><input id="camera_alpha" value="4" size="2">');
       } else if (this.value === "OrthographicCamera") {
-        return $("#cameraSpec").html('<label for="camera_s">s = </label><input id="camera_s" value="1" size="2">');
+        return $("#cameraSpec").html('<label for="camera_s">s = </label><input id="camera_s" value="5" size="2">');
       } else {
         return alert("Fail");
       }
@@ -62,7 +62,7 @@
       t = new Vector3($("#camera_t_x").val(), $("#camera_t_y").val(), $("#camera_t_z").val());
       aOrS = $("#cameraSpec input")[0].value;
       if ($("#selectCamera")[0].value === "PerspectiveCamera") {
-        return new PerspectiveCamera(e, g, t, aOrS);
+        return new PerspectiveCamera(e, g, t, Math.PI / aOrS);
       } else if ($("#selectCamera")[0].value === "OrthographicCamera") {
         return new OrthographicCamera(e, g, t, aOrS);
       }
@@ -75,6 +75,7 @@
     ctx.fillRect(0, 0, width, height);
     imgData = ctx.getImageData(0, 0, width, height);
     numberOfFinishedWorkers = 0;
+    startTime = 0;
     cam = null;
     world = null;
     parseAmbientLight = function() {
@@ -128,20 +129,24 @@
       worker.addEventListener('message', function(e) {
         extractImageData(e.data.imgData, 0, startH, 500, endH);
         if (numberOfWorkers === ++numberOfFinishedWorkers) {
-          return $("#loadDiv").toggle();
+          ctx.putImageData(imgData, 0, 0);
+          $("#loadDiv").toggle();
+          return alert("Time: " + (Date.now() - startTime) / 1000);
         }
       }, false);
-      return worker.postMessage({
+      return worker.postMessage(JSON.stringify({
         startH: startH,
         startW: 0,
         endH: endH,
         endW: 500,
         width: width,
-        height: height
-      });
+        height: height,
+        cam: cam
+      }));
     };
     render = function(webWorkers) {
       var c, i, tracer, x, y, _i, _j, _k, _results;
+      startTime = Date.now();
       if (webWorkers) {
         $("#loadDiv").toggle();
         numberOfFinishedWorkers = 0;
@@ -160,19 +165,26 @@
             imgData.data[(x * height + height - y - 1) * 4 + 2] = c.b * 255.0;
           }
         }
-        return ctx.putImageData(imgData, 0, 0);
+        ctx.putImageData(imgData, 0, 0);
+        return alert("Time: " + (Date.now() - startTime) / 1000);
       }
     };
     extractImageData = function(newImgData, sx, sy, ex, ey) {
-      var x, y, _i, _j;
+      var x, y, _i, _results;
+      _results = [];
       for (x = _i = sx; _i <= ex; x = _i += 1) {
-        for (y = _j = sy; _j <= ey; y = _j += 1) {
-          imgData.data[(x * height + y) * 4 + 0] = newImgData[(x * height + y) * 4 + 0];
-          imgData.data[(x * height + y) * 4 + 1] = newImgData[(x * height + y) * 4 + 1];
-          imgData.data[(x * height + y) * 4 + 2] = newImgData[(x * height + y) * 4 + 2];
-        }
+        _results.push((function() {
+          var _j, _results1;
+          _results1 = [];
+          for (y = _j = sy; _j <= ey; y = _j += 1) {
+            imgData.data[(x * height + y) * 4 + 0] = newImgData[(x * height + y) * 4 + 0];
+            imgData.data[(x * height + y) * 4 + 1] = newImgData[(x * height + y) * 4 + 1];
+            _results1.push(imgData.data[(x * height + y) * 4 + 2] = newImgData[(x * height + y) * 4 + 2]);
+          }
+          return _results1;
+        })());
       }
-      return ctx.putImageData(imgData, 0, 0);
+      return _results;
     };
     return $("#goButton").click(function() {
       parseData();
