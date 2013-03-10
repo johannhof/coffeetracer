@@ -2,13 +2,14 @@
 <html>
 <head>
     <title>Coffeescript Raytracer</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/font-awesome.min.css">
     <link href='http://fonts.googleapis.com/css?family=Raleway:400,300,200,100,500,600,700,800,900' rel='stylesheet'
           type='text/css'>
 </head>
 <body>
-<div id="wrapper">
+<div class="container-fluid" id="wrapper">
 <header class="clearfix">
     <h1>Canvas Raytracer</h1>
 </header>
@@ -17,24 +18,33 @@
     <div id="loadDiv">
         <i class="icon-cog icon-4x icon-spin"></i>
     </div>
-    <canvas id="mainCanvas" width="500" height="500"></canvas><br>
-    <label for="widthInput"><i class="icon-resize-horizontal"></i></label>
-    <input type="text" id="widthInput" placeholder="Width" value="500" size="4">
-    <label for="heightInput"><i class="icon-resize-vertical"></i></label>
-    <input type="text" id="heightInput" placeholder="Height" size="4" value="500">
+    <canvas id="mainCanvas" width="500" height="500"></canvas>
     <br>
+
+    <div class="input-prepend">
+        <label class="add-on" for="widthInput"><i class="icon-resize-horizontal"></i></label>
+        <input class="span1" type="text" id="widthInput" placeholder="Width" value="500" size="4">
+    </div>
+    <div class="input-prepend">
+        <label class="add-on" for="heightInput"><i class="icon-resize-vertical"></i></label>
+        <input class="span1" type="text" id="heightInput" placeholder="Height" size="4" value="500">
+    </div>
     <br>
-    <button id="revertButton"><i class="icon-reply"></i> Revert Changes</button>
-    <label for="webworkers">Webworkers?</label><input type="checkbox" id="webworkers" checked>
-    <button id="goButton"><i class="icon-cogs"></i> Render Image</button>
+
+    <div class="input-prepend">
+        <label class="add-on" for="webworkers">Webworkers?</label>
+        <input type="checkbox" id="webworkers" checked>
+    </div>
+    <button class="btn" id="revertButton"><i class="icon-reply"></i> Revert Changes</button>
+    <button class="btn btn-large btn-success" id="goButton"><i class="icon-cogs"></i> Render Image</button>
 </div>
 <div class="propertyContainer">
     <div class="propertyDiv" id="worldDiv">
         <h2><i class="icon-globe"></i> World</h2>
         Background:
-        <input class="redInput" size="1" value="0">
-        <input class="greenInput" size="1" value="0">
-        <input class="blueInput" size="1" value="0">
+        <input class="span1" type="text" class="redInput" size="1" value="0">
+        <input type="text" class="greenInput" size="1" value="0">
+        <input type="text" class="blueInput" size="1" value="0">
         <br>
         Index of Refraction: <input class="indexOfRefraction" value="1" size="2">
     </div>
@@ -50,27 +60,27 @@
         </h2>
         <div id="ambientLight">
             <b>Ambient:</b>
-            <input class="redInput" size="1" value="0.3">
-            <input class="greenInput" size="1" value="0.3">
-            <input class="blueInput" size="1" value="0.3">
+            <input type="text" class="redInput" size="1" value="0.3">
+            <input type="text" class="greenInput" size="1" value="0.3">
+            <input type="text" class="blueInput" size="1" value="0.3">
         </div>
         <div id="pointLightExample" style="display: none;">
             <div class="pointLight">
                 <input class="lightCheck" type="checkbox" checked>
                 <b>PointLight:</b>
                 <br> Color:
-                <input class="redInput" size="1" value="0.3">
-                <input class="greenInput" size="1" value="0.3">
-                <input class="blueInput" size="1" value="0.3">
+                <input type="text" class="redInput" size="1" value="0.3">
+                <input type="text" class="greenInput" size="1" value="0.3">
+                <input type="text" class="blueInput" size="1" value="0.3">
                 <br>
                 <label>
                     Shadows:
                     <input class="shadowCheck" type="checkbox" checked>
                 </label>
                 <br> Position:
-                <input class="posX" value="1" size="2">
-                <input class="posY" value="1" size="2">
-                <input class="posZ" value="1" size="2">
+                <input type="text" class="posX" value="1" size="2">
+                <input type="text" class="posY" value="1" size="2">
+                <input type="text" class="posZ" value="1" size="2">
 
             </div>
         </div>
@@ -79,42 +89,42 @@
                 <input class="lightCheck" type="checkbox" checked>
                 <b>SpotLight:</b>
                 <br> Color:
-                <input class="redInput" size="1" value="0.3">
-                <input class="greenInput" size="1" value="0.3">
-                <input class="blueInput" size="1" value="0.3">
+                <input type="text" class="redInput" size="1" value="0.3">
+                <input type="text" class="greenInput" size="1" value="0.3">
+                <input type="text" class="blueInput" size="1" value="0.3">
                 <br>
                 <label>
                     Shadows:
                     <input class="shadowCheck" type="checkbox" checked>
                 </label>
                 <br> Position:
-                <input class="posX" value="1" size="2">
-                <input class="posY" value="1" size="2">
-                <input class="posZ" value="1" size="2">
+                <input type="text" class="posX" value="1" size="2">
+                <input type="text" class="posY" value="1" size="2">
+                <input type="text" class="posZ" value="1" size="2">
                 <br> Direction:
-                <input class="dirX" value="1" size="2">
-                <input class="dirY" value="1" size="2">
-                <input class="dirZ" value="1" size="2">
+                <input type="text" class="dirX" value="1" size="2">
+                <input type="text" class="dirY" value="1" size="2">
+                <input type="text" class="dirZ" value="1" size="2">
                 <br> HalfAngle: <input class="halfAngle" value="1" size="2">
             </div>
         </div>
         <div id="directionalLightExample" style="display: none;">
             <div class="directionalLight">
-                <input class="lightCheck" type="checkbox" checked>
+                <input type="text" class="lightCheck" type="checkbox" checked>
                 <b>Directional Light:</b>
                 <br> Color:
-                <input class="redInput" size="1" value="0.3">
-                <input class="greenInput" size="1" value="0.3">
-                <input class="blueInput" size="1" value="0.3">
+                <input type="text" class="redInput" size="1" value="0.3">
+                <input type="text" class="greenInput" size="1" value="0.3">
+                <input type="text" class="blueInput" size="1" value="0.3">
                 <br>
                 <label>
                     Shadows:
                     <input class="shadowCheck" type="checkbox" checked>
                 </label>
                 <br> Direction:
-                <input class="dirX" value="1" size="2">
-                <input class="dirY" value="1" size="2">
-                <input class="dirZ" value="1" size="2">
+                <input type="text" class="dirX" value="1" size="2">
+                <input type="text" class="dirY" value="1" size="2">
+                <input type="text" class="dirZ" value="1" size="2">
             </div>
         </div>
     </div>
@@ -127,11 +137,17 @@
             <option value="OrthographicCamera">Orthographic Camera</option>
         </select>
         <br>
-        e = <input id="camera_e_x" value="5" size="2"><input id="camera_e_y" value="5" size="2"><input id="camera_e_z" value="5" size="2">
+        e = <input id="camera_e_x" value="5" size="2"><input id="camera_e_y" value="5" size="2"><input id="camera_e_z"
+                                                                                                       value="5"
+                                                                                                       size="2">
         <br>
-        g = <input id="camera_g_x" value="-1" size="2"><input id="camera_g_y" value="-1" size="2"><input id="camera_g_z" value="-1" size="2">
+        g = <input id="camera_g_x" value="-1" size="2"><input id="camera_g_y" value="-1" size="2"><input id="camera_g_z"
+                                                                                                         value="-1"
+                                                                                                         size="2">
         <br>
-        t = <input id="camera_t_x" value="0" size="2"><input id="camera_t_y" value="1" size="2"><input id="camera_t_z" value="0" size="2">
+        t = <input id="camera_t_x" value="0" size="2"><input id="camera_t_y" value="1" size="2"><input id="camera_t_z"
+                                                                                                       value="0"
+                                                                                                       size="2">
 
         <div id="cameraSpec">
             <label for="camera_alpha">alpha = PI / </label><input id="camera_alpha" value="4" size="2">
@@ -263,13 +279,18 @@
 </div>
 </div>
 <footer>
-    <a href="http://nodejs.org/"><img src="images/nodelogo.png" width="160"></a>
-    <a href="http://www.w3.org/html/logo/"><img src="http://www.w3.org/html/logo/badge/html5-badge-h-css3-graphics-performance-semantics-storage.png" width="190" alt="HTML5 Powered with CSS3 / Styling, Graphics, 3D &amp; Effects, Performance &amp; Integration, Semantics, and Offline &amp; Storage" title="HTML5 Powered with CSS3 / Styling, Graphics, 3D &amp; Effects, Performance &amp; Integration, Semantics, and Offline &amp; Storage"></a>
-    <a href="http://coffeescript.org/"><img src="images/coffescript-logo.png" width="190"></a>
+    <a href="http://nodejs.org/"><img src="img/nodelogo.png" width="160"></a>
+    <a href="http://www.w3.org/html/logo/"><img
+            src="http://www.w3.org/html/logo/badge/html5-badge-h-css3-graphics-performance-semantics-storage.png"
+            width="190"
+            alt="HTML5 Powered with CSS3 / Styling, Graphics, 3D &amp; Effects, Performance &amp; Integration, Semantics, and Offline &amp; Storage"
+            title="HTML5 Powered with CSS3 / Styling, Graphics, 3D &amp; Effects, Performance &amp; Integration, Semantics, and Offline &amp; Storage"></a>
+    <a href="http://coffeescript.org/"><img src="img/coffescript-logo.png" width="190"></a>
 </footer>
 </div>
-<script src="lib/jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="js/jquery-1.9.1.min.js" type="text/javascript"></script>
 <script src="engine.js" type="text/javascript"></script>
 <script src="main.js" type="text/javascript"></script>
+<script src="js/bootstrap.min.js"></script>
 </body>
 </html>

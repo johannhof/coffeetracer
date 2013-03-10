@@ -110,8 +110,8 @@ $ ->
     if webWorkers
       $("#loadDiv").toggle()
       numberOfFinishedWorkers = 0
-      for i in [0..1]
-        startWorker(i, 2)
+      for i in [0..3]
+        startWorker(i, 4)
     else
       tracer = new Tracer(world)
       for x in [0..width] by 1
