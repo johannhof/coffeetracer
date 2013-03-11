@@ -7,12 +7,14 @@
     <link rel="stylesheet" href="css/font-awesome.min.css">
     <link href='http://fonts.googleapis.com/css?family=Raleway:400,300,200,100,500,600,700,800,900' rel='stylesheet'
           type='text/css'>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-<div class="container-fluid" id="wrapper">
+<div id="wrapper">
 <header class="clearfix">
     <h1>Canvas Raytracer</h1>
 </header>
+<div class="container-fluid">
 <div id="mainDiv" class="clearfix">
 <div id="canvasDiv">
     <div id="loadDiv">
@@ -42,22 +44,25 @@
     <div class="propertyDiv" id="worldDiv">
         <h2><i class="icon-globe"></i> World</h2>
         Background:
-        <input class="span1" type="text" class="redInput" size="1" value="0">
+        <input type="text" class="redInput" size="1" value="0">
         <input type="text" class="greenInput" size="1" value="0">
         <input type="text" class="blueInput" size="1" value="0">
         <br>
-        Index of Refraction: <input class="indexOfRefraction" value="1" size="2">
+        Index of Refraction: <input type="text" class="indexOfRefraction" value="1" size="2">
     </div>
     <div class="propertyDiv" id="lightsDiv">
         <h2>
             <i class="icon-lightbulb"></i> Lights
-            <select class="selectLight">
+        </h2>
+
+        <div class="input-append">
+            <select id="selectLight">
                 <option value="PointLight">PointLight</option>
                 <option value="SpotLight">SpotLight</option>
                 <option value="DirectionalLight">Directional Light</option>
             </select>
-            <button class="addButton">Add</button>
-        </h2>
+            <button id="addLightButton" class="btn">Add</button>
+        </div>
         <div id="ambientLight">
             <b>Ambient:</b>
             <input type="text" class="redInput" size="1" value="0.3">
@@ -137,58 +142,65 @@
             <option value="OrthographicCamera">Orthographic Camera</option>
         </select>
         <br>
-        e = <input id="camera_e_x" value="5" size="2"><input id="camera_e_y" value="5" size="2"><input id="camera_e_z"
-                                                                                                       value="5"
-                                                                                                       size="2">
+        e = <input type="text" id="camera_e_x" value="5" size="2">
+        <input type="text" id="camera_e_y" value="5" size="2">
+        <input type="text" id="camera_e_z" value="5" size="2">
         <br>
-        g = <input id="camera_g_x" value="-1" size="2"><input id="camera_g_y" value="-1" size="2"><input id="camera_g_z"
-                                                                                                         value="-1"
-                                                                                                         size="2">
+        g = <input type="text" id="camera_g_x" value="-1" size="2">
+        <input type="text" id="camera_g_y" value="-1" size="2">
+        <input type="text" id="camera_g_z" value="-1" size="2">
         <br>
-        t = <input id="camera_t_x" value="0" size="2"><input id="camera_t_y" value="1" size="2"><input id="camera_t_z"
-                                                                                                       value="0"
-                                                                                                       size="2">
+        t = <input type="text" id="camera_t_x" value="0" size="2">
+        <input type="text" id="camera_t_y" value="1" size="2">
+        <input type="text" id="camera_t_z" value="0" size="2">
 
         <div id="cameraSpec">
-            <label for="camera_alpha">alpha = PI / </label><input id="camera_alpha" value="4" size="2">
+            <label for="camera_alpha">alpha = PI / </label><input type="text" id="camera_alpha" value="4" size="2">
         </div>
     </div>
     <div class="propertyDiv" id="objectsDiv">
         <h2>
             <i class="icon-picture"></i> Objects
-            <select class="selectObject">
+        </h2>
+
+        <div class="input-append">
+            <select id="selectObject">
                 <option value="Node">Node</option>
                 <option value="Sphere">Sphere</option>
                 <option value="Box">Box</option>
                 <option value="Plane">Plane</option>
                 <option value="Triangle">Triangle</option>
             </select>
-            <button class="addButton">Add</button>
-        </h2>
+            <button id="addObjectButton" class="btn">Add</button>
+        </div>
         <div id="nodeHTMLExample" style="display: none;">
             <div class="node">
                 <b>Node:</b>
 
                 <div class="nodeContainer">
                     Objects:
-                    <select class="nodeSelectObject">
-                        <option value="Node">Node</option>
-                        <option value="Sphere">Sphere</option>
-                        <option value="Box">Box</option>
-                        <option value="Plane">Plane</option>
-                        <option value="Triangle">Triangle</option>
-                    </select>
-                    <button class="nodeAddObjectButton">Add</button>
+                    <div class="input-append">
+                        <select class="nodeSelectObject">
+                            <option value="Node">Node</option>
+                            <option value="Sphere">Sphere</option>
+                            <option value="Box">Box</option>
+                            <option value="Plane">Plane</option>
+                            <option value="Triangle">Triangle</option>
+                        </select>
+                        <button class="btn">Add</button>
+                    </div>
                     <br>
                     Transformations:
-                    <select class="nodeSelectObject">
-                        <option value="Scaling">Scaling</option>
-                        <option value="Translation">Translation</option>
-                        <option value="X-Rotation">X-Rotation</option>
-                        <option value="Y-Rotation">Y-Rotation</option>
-                        <option value="Z-Rotation">Z-Rotation</option>
-                    </select>
-                    <button class="nodeAddObjectButton">Add</button>
+                    <div class="input-append">
+                        <select class="nodeSelectObject">
+                            <option value="Scaling">Scaling</option>
+                            <option value="Translation">Translation</option>
+                            <option value="X-Rotation">X-Rotation</option>
+                            <option value="Y-Rotation">Y-Rotation</option>
+                            <option value="Z-Rotation">Z-Rotation</option>
+                        </select>
+                        <button class="btn">Add</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -205,16 +217,16 @@
 
                 <div class="objectContainer">
                     Center:
-                    x=<input class="sphereCenterX" value="0" size="1">
-                    y=<input class="sphereCenterY" value="0" size="1">
-                    z=<input class="sphereCenterZ" value="0" size="1">
-                    <br>Radius: <input class="sphereRadius" value="1" size="1">
+                    x=<input type="text" class="sphereCenterX" value="0" size="1">
+                    y=<input type="text" class="sphereCenterY" value="0" size="1">
+                    z=<input type="text" class="sphereCenterZ" value="0" size="1">
+                    <br>Radius: <input type="text" class="sphereRadius" value="1" size="1">
                 </div>
                 <div class="materialContainer">
                     Color:
-                    <input class="redInput" size="1" value="0.3">
-                    <input class="greenInput" size="1" value="0.3">
-                    <input class="blueInput" size="1" value="0.3">
+                    <input type="text" class="redInput" size="1" value="0.3">
+                    <input type="text" class="greenInput" size="1" value="0.3">
+                    <input type="text" class="blueInput" size="1" value="0.3">
                 </div>
             </div>
         </div>
@@ -231,19 +243,19 @@
 
                 <div class="objectContainer">
                     lbf:
-                    <label>x=<input class="boxLBFX" value="0" size="1"></label>
-                    <label>y=<input class="boxLBFY" value="0" size="1"></label>
-                    z=<input class="boxLBFZ" value="0" size="1">
+                    <label>x=<input type="text" class="boxLBFX" value="0" size="1"></label>
+                    <label>y=<input type="text" class="boxLBFY" value="0" size="1"></label>
+                    z=<input type="text" class="boxLBFZ" value="0" size="1">
                     <br>run:
-                    x=<input class="boxRUNX" value="0" size="1">
-                    y=<input class="boxRUNY" value="0" size="1">
-                    z=<input class="boxRUNZ" value="0" size="1">
+                    x=<input type="text" class="boxRUNX" value="0" size="1">
+                    y=<input type="text" class="boxRUNY" value="0" size="1">
+                    z=<input type="text" class="boxRUNZ" value="0" size="1">
                 </div>
                 <div class="materialContainer">
                     Color:
-                    <input class="redInput" size="1" value="0.3">
-                    <input class="greenInput" size="1" value="0.3">
-                    <input class="blueInput" size="1" value="0.3">
+                    <input type="text" class="redInput" size="1" value="0.3">
+                    <input type="text" class="greenInput" size="1" value="0.3">
+                    <input type="text" class="blueInput" size="1" value="0.3">
                 </div>
             </div>
         </div>
@@ -259,23 +271,24 @@
                 </select>
 
                 <div class="objectContainer">
-                    a: x=<input class="planeAX" value="0" size="1">
-                    y=<input class="planeAY" value="0" size="1">
-                    z=<input class="planeAZ" value="0" size="1">
+                    a: x=<input type="text" class="planeAX" value="0" size="1">
+                    y=<input type="text" class="planeAY" value="0" size="1">
+                    z=<input type="text" class="planeAZ" value="0" size="1">
                     <br>n:
-                    x=<input class="planeNX" value="0" size="1">
-                    y=<input class="planeNY" value="0" size="1">
-                    z=<input class="planeNZ" value="0" size="1">
+                    x=<input type="text" class="planeNX" value="0" size="1">
+                    y=<input type="text" class="planeNY" value="0" size="1">
+                    z=<input type="text" class="planeNZ" value="0" size="1">
                 </div>
                 <div class="materialContainer">
                     Color:
-                    <input class="redInput" size="1" value="0.3">
-                    <input class="greenInput" size="1" value="0.3">
-                    <input class="blueInput" size="1" value="0.3">
+                    <input type="text" class="redInput" size="1" value="0.3">
+                    <input type="text" class="greenInput" size="1" value="0.3">
+                    <input type="text" class="blueInput" size="1" value="0.3">
                 </div>
             </div>
         </div>
     </div>
+</div>
 </div>
 </div>
 <footer>

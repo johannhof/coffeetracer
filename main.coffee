@@ -6,8 +6,8 @@ $ ->
   sphereHTML = $("#sphereHTMLExample").html()
   boxHTML = $("#boxHTMLExample").html()
   planeHTML = $('#planeHTMLExample').html()
-  $("#objectsDiv .addButton").click ->
-    $(this).parent().parent().append(getObjectHTML($(this).parent().children(".selectObject").val()))
+  $("#addObjectButton").click ->
+    $("#objectsDiv").append(getObjectHTML($("#selectObject").val()))
   getObjectHTML = (className) ->
     switch className
       when "Node" then return nodeHTML
@@ -21,8 +21,8 @@ $ ->
   pointLightHTML = $("#pointLightExample").html()
   spotLightHTML = $("#spotLightExample").html()
   directionalLightHTML = $("#directionalLightExample").html()
-  $("#lightsDiv .addButton").click ->
-    $(this).parent().parent().append(getLightHTML($(this).parent().children(".selectLight").val()))
+  $("#addLightButton").click ->
+    $("#lightsDiv").append(getLightHTML($("#selectLight").val()))
   getLightHTML = (lightName) ->
     switch lightName
       when "PointLight" then pointLightHTML
