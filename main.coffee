@@ -34,9 +34,9 @@ $ ->
   #######Cameras#######
   $("#selectCamera").change ->
     if this.value is "PerspectiveCamera"
-      $("#cameraSpec").html '<label for="camera_alpha">alpha = PI / </label><input id="camera_alpha" value="4" size="2">'
+      $("#cameraSpec").html '<label for="camera_alpha">alpha = PI / </label><input type="text" id="camera_alpha" value="4" size="2">'
     else if this.value is "OrthographicCamera"
-      $("#cameraSpec").html '<label for="camera_s">s = </label><input id="camera_s" value="5" size="2">'
+      $("#cameraSpec").html '<label for="camera_s">s = </label><input type="text" id="camera_s" value="5" size="2">'
     else alert "Fail"
 
   parseCameraDiv = ->
