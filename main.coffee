@@ -1,5 +1,6 @@
 $ = jQuery
 $ ->
+
   $("#loadDiv").toggle()
   #######Objects#######
   nodeHTML = $("#nodeHTMLExample").html()
@@ -8,6 +9,8 @@ $ ->
   planeHTML = $('#planeHTMLExample').html()
   $("#addObjectButton").click ->
     $("#objectsDiv").append(getObjectHTML($("#selectObject").val()))
+    $(".removeButton").click ->
+      alert "test"
   getObjectHTML = (className) ->
     switch className
       when "Node" then return nodeHTML
