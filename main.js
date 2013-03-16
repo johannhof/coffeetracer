@@ -5,27 +5,59 @@
   $ = jQuery;
 
   $(function() {
-    var boxHTML, cam, canvas, ctx, directionalLightHTML, extractImageData, getLightHTML, getObjectHTML, height, imgData, lights, nodeHTML, numberOfFinishedWorkers, parseAmbientLight, parseBackgroundColor, parseCameraDiv, parseData, parseLightDiv, parseLights, parseObjectDiv, parseObjects, planeHTML, pointLightHTML, render, sphereHTML, spotLightHTML, startTime, startWorker, width, world;
+    var LambertMaterialHTML, PhongMaterialHTML, ReflectiveMaterialHTML, SingleColorMaterialHTML, TransparentMaterialHTML, boxHTML, cam, canvas, createObjectDiv, ctx, directionalLightHTML, extractImageData, getLightHTML, getMaterialHTML, getObjectHTML, height, imgData, nodeHTML, numberOfFinishedWorkers, parseAmbientLight, parseBackgroundColor, parseCameraDiv, parseData, parseLightDiv, parseLights, parseMaterial, parseObjectDiv, parseObjects, planeHTML, pointLightHTML, render, sphereHTML, spotLightHTML, startTime, startWorker, width, world;
     $("#loadDiv").toggle();
     nodeHTML = $("#nodeHTMLExample").html();
     sphereHTML = $("#sphereHTMLExample").html();
     boxHTML = $("#boxHTMLExample").html();
-    planeHTML = $('#planeHTMLExample').html();
+    planeHTML = $("#planeHTMLExample").html();
+    SingleColorMaterialHTML = $("#SingleColorMaterialHTMLExample").html();
+    LambertMaterialHTML = $("#LambertMaterialHTMLExample").html();
+    PhongMaterialHTML = $("#PhongMaterialHTMLExample").html();
+    ReflectiveMaterialHTML = $("#ReflectiveMaterialHTMLExample").html();
+    TransparentMaterialHTML = $("#TransparentMaterialHTMLExample").html();
     $("#addObjectButton").click(function() {
       return $("#objects").append(getObjectHTML($("#selectObject").val()));
     });
     getObjectHTML = function(className) {
       switch (className) {
         case "Node":
-          return nodeHTML;
+          return createObjectDiv("node", nodeHTML);
         case "Sphere":
-          return sphereHTML;
+          return createObjectDiv("sphere", sphereHTML);
         case "Box":
-          return boxHTML;
+          return createObjectDiv("box", boxHTML);
         case "Plane":
-          return planeHTML;
+          return createObjectDiv("plane", planeHTML);
         default:
           return className + "not valid";
+      }
+    };
+    createObjectDiv = function(objectName, html) {
+      var div;
+      div = document.createElement("div");
+      div.setAttribute("class", objectName);
+      $(div).append(html);
+      $(div).children(".removeButton").click(function() {
+        return $(div).remove();
+      });
+      $(div).children(".selectMaterial").change(function() {
+        return $(div).children(".materialContainer").html(getMaterialHTML(this.value));
+      });
+      return div;
+    };
+    getMaterialHTML = function(materialName) {
+      switch (materialName) {
+        case "SingleColorMaterial":
+          return SingleColorMaterialHTML;
+        case "LambertMaterial":
+          return LambertMaterialHTML;
+        case "PhongMaterial":
+          return PhongMaterialHTML;
+        case "ReflectiveMaterial":
+          return ReflectiveMaterialHTML;
+        case "TransparentMaterial":
+          return TransparentMaterialHTML;
       }
     };
     pointLightHTML = $("#pointLightExample").html();
@@ -77,7 +109,6 @@
     numberOfFinishedWorkers = 0;
     startTime = 0;
     cam = null;
-    lights = null;
     world = null;
     parseAmbientLight = function() {
       var ambientDiv;
@@ -97,7 +128,7 @@
     parseObjectDiv = function(objectDiv) {
       var a, c, lbf, material, n, objectClass, objectContainer, r, run;
       objectClass = $(objectDiv).attr("class");
-      material = new PhongMaterial(new Color(1, 0, 0), new Color(1, 1, 1), 20);
+      material = parseMaterial(objectDiv);
       objectContainer = $(objectDiv).children(".objectContainer")[0];
       if (!objectContainer) {
         switch (objectClass) {
@@ -112,7 +143,7 @@
         switch (objectClass) {
           case "plane":
             a = new Point3(parseFloat($(objectContainer).children(".planeAX").val()), parseFloat($(objectContainer).children(".planeAY").val()), parseFloat($(objectContainer).children(".planeAZ").val()));
-            n = new Vector3(parseFloat($(objectContainer).children(".planeNX").val()), parseFloat($(objectContainer).children(".planeNY").val()), parseFloat($(objectContainer).children(".planeNZ").val()));
+            n = new Normal3(parseFloat($(objectContainer).children(".planeNX").val()), parseFloat($(objectContainer).children(".planeNY").val()), parseFloat($(objectContainer).children(".planeNZ").val()));
             return new Plane(material, a, n);
           case "box":
             lbf = new Point3(parseFloat($(objectContainer).children(".boxLBFX").val()), parseFloat($(objectContainer).children(".boxLBFY").val()), parseFloat($(objectContainer).children(".boxLBFZ").val()));
@@ -123,6 +154,17 @@
             r = parseFloat($(objectContainer).children(".sphereRadius").val());
             return new Sphere(material, c, r);
         }
+      }
+    };
+    parseMaterial = function(objectDiv) {
+      var materialClass, materialContainer;
+      materialClass = $(objectDiv).children(".selectMaterial").val();
+      materialContainer = $(objectDiv).children(".materialContainer");
+      switch (materialClass) {
+        case "SingleColorMaterial":
+          return new SingleColorMaterial(new Color(parseFloat($(materialContainer).children(".redInput").val()), parseFloat($(materialContainer).children(".greenInput").val()), parseFloat($(materialContainer).children(".blueInput").val())));
+        case "LambertMaterial":
+          return new LambertMaterial(new Color(parseFloat($(materialContainer).children(".redInput").val()), parseFloat($(materialContainer).children(".greenInput").val()), parseFloat($(materialContainer).children(".blueInput").val())));
       }
     };
     parseBackgroundColor = function() {
@@ -158,11 +200,8 @@
       return new SpotLight(color, shadows, position, direction, Math.PI / parseFloat($(lightDiv).children(".halfAngle").val()));
     };
     parseData = function() {
-      var objects;
-      objects = parseObjects();
       cam = parseCameraDiv();
-      lights = parseLights();
-      return world = new World(parseBackgroundColor(), objects, lights, parseAmbientLight(), parseFloat($("#worldDiv").children(".indexOfRefraction").val()));
+      return world = new World(parseBackgroundColor(), parseObjects(), parseLights(), parseAmbientLight(), parseFloat($("#worldDiv").children(".indexOfRefraction").val()));
     };
     startWorker = function(number, numberOfWorkers) {
       var endH, startH, worker;
@@ -185,7 +224,7 @@
         width: width,
         height: height,
         cam: cam,
-        lights: lights
+        world: world
       }));
     };
     render = function(webWorkers) {

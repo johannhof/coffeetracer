@@ -1,24 +1,64 @@
 restoreCam = (cam) ->
-  e = new Point3(parseFloat(cam.e.x), parseFloat(cam.e.y), parseFloat(cam.e.z))
-  g = new Vector3(parseFloat(cam.g.x), parseFloat(cam.g.y), parseFloat(cam.g.z))
-  t = new Vector3(parseFloat(cam.t.x), parseFloat(cam.t.y), parseFloat(cam.t.z))
+  e = restorePoint(cam.e)
+  g = restoreVector(cam.g)
+  t = restoreVector(cam.t)
   if cam.angle
     new PerspectiveCamera(e, g, t, parseFloat(cam.angle))
   else
     new OrthographicCamera(e, g, t, parseFloat(cam.s))
 
+restoreWorld = (world) ->
+  new World(restoreColor(world.backgroundColor), restoreObjects(world.elements), restoreLights(world.lights),
+            restoreColor(world.ambient), parseFloat(world.indexOfRefraction))
+
+restoreObjects = (objects) ->
+  (restoreObject object for object in objects)
+
+restoreObject = (object) ->
+  if object.a and object.n
+    return new Plane(restoreMaterial(object.material), restorePoint(object.a), restoreNormal(object.n))
+  if object.lbf
+    return new AxisAlignedBox(restoreMaterial(object.material), restorePoint(object.lbf), restorePoint(object.run))
+  if object.c and object.r
+    return new Sphere(restoreMaterial(object.material), restorePoint(object.c), parseFloat(object.r))
+
+restoreMaterial = (material) ->
+  if material.indexOfRefraction
+    return new TransparentMaterial(parseFloat(material.indexOfRefraction))
+  if material.reflection
+    return new ReflectiveMaterial(restoreColor(material.diffuse), restoreColor(material.specular),
+                                  parseFloat(material.exponent), restoreColor(material.reflection))
+  if material.diffuse
+    return new PhongMaterial(restoreColor(material.diffuse), restoreColor(material.specular),
+                             parseFloat(material.exponent))
+  if material.singleColorIndicator
+    return new SingleColorMaterial(restoreColor(material.color))
+  new LambertMaterial(restoreColor(material.color))
+
+
+restoreColor = (color) ->
+  new Color(parseFloat(color.r), parseFloat(color.g), parseFloat(color.b))
+
+restorePoint = (point) ->
+  new Point3(parseFloat(point.x), parseFloat(point.y), parseFloat(point.z))
+
+restoreVector = (vector) ->
+  new Vector3(parseFloat(vector.x), parseFloat(vector.y), parseFloat(vector.z))
+
+restoreNormal = (normal) ->
+  new Normal3(parseFloat(normal.x), parseFloat(normal.y), parseFloat(normal.z))
+
 restoreLights = (lights) ->
   returnLights = []
   for light in lights
-    color = new Color(parseFloat(light.color.r), parseFloat(light.color.g), parseFloat(light.color.b))
+    color = restoreColor(light.color)
     shadows = light.castsShadows
     position = null
     direction = null
     if light.position
-      position = new Point3(parseFloat(light.position.x), parseFloat(light.position.y), parseFloat(light.position.z))
+      position = restorePoint(light.position)
     if light.direction
-      direction = new Vector3(parseFloat(light.direction.x), parseFloat(light.direction.y),
-                              parseFloat(light.direction.z))
+      direction = restoreVector(light.direction)
     if position and direction and light.halfAngle
       returnLights.push(new SpotLight(color, shadows, position, direction, parseFloat(light.halfAngle)))
     else if direction
@@ -27,22 +67,20 @@ restoreLights = (lights) ->
       returnLights.push(new PointLight(color, shadows, position))
   returnLights
 
-self.addEventListener('message', (e) ->
+initialize = (e) ->
   data = JSON.parse(e.data)
   render(data.startW, data.endW, data.startH, data.endH, data.width, data.height, restoreCam(data.cam),
-         restoreLights(data.lights))
-, false)
+         restoreWorld(data.world))
 
-render = (startW, endW, startH, endH, width, height, cam, lights) ->
+self.addEventListener('message', initialize, false)
+
+render = (startW, endW, startH, endH, width, height, cam, world) ->
   imgData = []
-  objects = [new Node(Transform.Scaling(1, 1, 1),
-                      [new Sphere(new PhongMaterial(new Color(1, 0, 0), new Color(1, 1, 1), 20))], null)]
-  world = new World(new Color(0, 0, 0), objects, lights, new Color(0.3, 0.3, 0.3), 1)
   tracer = new Tracer(world)
-  for x in [startW..endW] by 1
-    for y in [startH..endH] by 1
+  for x in [startH..endH] by 1
+    for y in [startW..endW] by 1
       c = tracer.colorFor((cam.rayFor(width, height, x, y)))
-      imgData[(x * width + y) * 4 + 0] = c.r * 255.0
-      imgData[(x * width + y) * 4 + 1] = c.g * 255.0
-      imgData[(x * width + y) * 4 + 2] = c.b * 255.0
+      imgData[(y * height + x) * 4 + 0] = c.r * 255.0
+      imgData[(y * height + x) * 4 + 1] = c.g * 255.0
+      imgData[(y * height + x) * 4 + 2] = c.b * 255.0
   self.postMessage({imgData})

@@ -5,17 +5,41 @@ $ ->
   nodeHTML = $("#nodeHTMLExample").html()
   sphereHTML = $("#sphereHTMLExample").html()
   boxHTML = $("#boxHTMLExample").html()
-  planeHTML = $('#planeHTMLExample').html()
+  planeHTML = $("#planeHTMLExample").html()
+  SingleColorMaterialHTML = $("#SingleColorMaterialHTMLExample").html()
+  LambertMaterialHTML = $("#LambertMaterialHTMLExample").html()
+  PhongMaterialHTML = $("#PhongMaterialHTMLExample").html()
+  ReflectiveMaterialHTML = $("#ReflectiveMaterialHTMLExample").html()
+  TransparentMaterialHTML = $("#TransparentMaterialHTMLExample").html()
   $("#addObjectButton").click ->
     $("#objects").append(getObjectHTML($("#selectObject").val()))
   getObjectHTML = (className) ->
     switch className
-      when "Node" then return nodeHTML
-      when "Sphere" then return sphereHTML
-      when "Box" then return boxHTML
-      when "Plane" then return planeHTML
+      when "Node" then return createObjectDiv "node", nodeHTML
+      when "Sphere" then createObjectDiv "sphere", sphereHTML
+      when "Box" then createObjectDiv "box", boxHTML
+      when "Plane" then createObjectDiv "plane", planeHTML
       else
         className + "not valid"
+
+  createObjectDiv = (objectName, html) ->
+    div = document.createElement "div"
+    div.setAttribute("class", objectName)
+    $(div).append html
+    $(div).children(".removeButton").click ->
+      $(div).remove()
+    $(div).children(".selectMaterial").change ->
+      $(div).children(".materialContainer").html(getMaterialHTML(this.value))
+    div
+
+
+  getMaterialHTML = (materialName) ->
+    switch materialName
+      when "SingleColorMaterial" then SingleColorMaterialHTML
+      when "LambertMaterial" then LambertMaterialHTML
+      when "PhongMaterial" then PhongMaterialHTML
+      when "ReflectiveMaterial" then ReflectiveMaterialHTML
+      when "TransparentMaterial" then TransparentMaterialHTML
 
   #######Lights#######
   pointLightHTML = $("#pointLightExample").html()
@@ -40,9 +64,12 @@ $ ->
     else alert "Fail"
 
   parseCameraDiv = ->
-    e = new Point3(parseFloat($("#camera_e_x").val()), parseFloat($("#camera_e_y").val()), parseFloat($("#camera_e_z").val()))
-    g = new Vector3(parseFloat($("#camera_g_x").val()), parseFloat($("#camera_g_y").val()), parseFloat($("#camera_g_z").val()))
-    t = new Vector3(parseFloat($("#camera_t_x").val()), parseFloat($("#camera_t_y").val()), parseFloat($("#camera_t_z").val()))
+    e = new Point3(parseFloat($("#camera_e_x").val()), parseFloat($("#camera_e_y").val()),
+                   parseFloat($("#camera_e_z").val()))
+    g = new Vector3(parseFloat($("#camera_g_x").val()), parseFloat($("#camera_g_y").val()),
+                    parseFloat($("#camera_g_z").val()))
+    t = new Vector3(parseFloat($("#camera_t_x").val()), parseFloat($("#camera_t_y").val()),
+                    parseFloat($("#camera_t_z").val()))
     aOrS = $("#cameraSpec input")[0].value
     if $("#selectCamera")[0].value is "PerspectiveCamera"
       return new PerspectiveCamera(e, g, t, Math.PI / aOrS)
@@ -64,7 +91,6 @@ $ ->
 
   #######Parsing#######
   cam = null;
-  lights = null;
   world = null;
   parseAmbientLight = ->
     ambientDiv = $("#ambientLight")
@@ -78,7 +104,7 @@ $ ->
 
   parseObjectDiv = (objectDiv) ->
     objectClass = $(objectDiv).attr "class"
-    material = new PhongMaterial(new Color(1, 0, 0), new Color(1, 1, 1), 20)
+    material = parseMaterial(objectDiv)
     objectContainer = $(objectDiv).children(".objectContainer")[0]
     if not objectContainer
       switch objectClass
@@ -88,17 +114,40 @@ $ ->
     else
       switch objectClass
         when "plane"
-          a = new Point3(parseFloat($(objectContainer).children(".planeAX").val()),parseFloat($(objectContainer).children(".planeAY").val()),parseFloat($(objectContainer).children(".planeAZ").val()))
-          n = new Vector3(parseFloat($(objectContainer).children(".planeNX").val()),parseFloat($(objectContainer).children(".planeNY").val()),parseFloat($(objectContainer).children(".planeNZ").val()))
-          return new Plane(material,a,n)
+          a = new Point3(parseFloat($(objectContainer).children(".planeAX").val()),
+                         parseFloat($(objectContainer).children(".planeAY").val()),
+                         parseFloat($(objectContainer).children(".planeAZ").val()))
+          n = new Normal3(parseFloat($(objectContainer).children(".planeNX").val()),
+                          parseFloat($(objectContainer).children(".planeNY").val()),
+                          parseFloat($(objectContainer).children(".planeNZ").val()))
+          return new Plane(material, a, n)
         when "box"
-          lbf = new Point3(parseFloat($(objectContainer).children(".boxLBFX").val()),parseFloat($(objectContainer).children(".boxLBFY").val()),parseFloat($(objectContainer).children(".boxLBFZ").val()))
-          run = new Point3(parseFloat($(objectContainer).children(".boxRUNX").val()),parseFloat($(objectContainer).children(".boxRUNY").val()),parseFloat($(objectContainer).children(".boxRUNZ").val()))
-          return new AxisAlignedBox(material,lbf,run)
+          lbf = new Point3(parseFloat($(objectContainer).children(".boxLBFX").val()),
+                           parseFloat($(objectContainer).children(".boxLBFY").val()),
+                           parseFloat($(objectContainer).children(".boxLBFZ").val()))
+          run = new Point3(parseFloat($(objectContainer).children(".boxRUNX").val()),
+                           parseFloat($(objectContainer).children(".boxRUNY").val()),
+                           parseFloat($(objectContainer).children(".boxRUNZ").val()))
+          return new AxisAlignedBox(material, lbf, run)
         when "sphere"
-          c = new Point3(parseFloat($(objectContainer).children(".sphereCenterX").val()),parseFloat($(objectContainer).children(".sphereCenterY").val()),parseFloat($(objectContainer).children(".sphereCenterZ").val()))
+          c = new Point3(parseFloat($(objectContainer).children(".sphereCenterX").val()),
+                         parseFloat($(objectContainer).children(".sphereCenterY").val()),
+                         parseFloat($(objectContainer).children(".sphereCenterZ").val()))
           r = parseFloat($(objectContainer).children(".sphereRadius").val())
-          return new Sphere(material,c,r)
+          return new Sphere(material, c, r)
+
+  parseMaterial = (objectDiv) ->
+    materialClass = $(objectDiv).children(".selectMaterial").val()
+    materialContainer = $(objectDiv).children(".materialContainer")
+    switch materialClass
+      when "SingleColorMaterial"
+        new SingleColorMaterial(new Color(parseFloat($(materialContainer).children(".redInput").val()),
+                                parseFloat($(materialContainer).children(".greenInput").val()),
+                                parseFloat($(materialContainer).children(".blueInput").val())))
+      when "LambertMaterial"
+        new LambertMaterial(new Color(parseFloat($(materialContainer).children(".redInput").val()),
+                            parseFloat($(materialContainer).children(".greenInput").val()),
+                            parseFloat($(materialContainer).children(".blueInput").val())))
 
   parseBackgroundColor = ->
     worldDiv = $("#worldDiv")
@@ -127,10 +176,8 @@ $ ->
     new SpotLight(color, shadows, position, direction, Math.PI / parseFloat($(lightDiv).children(".halfAngle").val()))
 
   parseData = ->
-    objects = parseObjects()
     cam = parseCameraDiv()
-    lights = parseLights()
-    world = new World(parseBackgroundColor(), objects, lights, parseAmbientLight(),
+    world = new World(parseBackgroundColor(), parseObjects(), parseLights(), parseAmbientLight(),
                       parseFloat($("#worldDiv").children(".indexOfRefraction").val()))
 
   startWorker = (number, numberOfWorkers)->
@@ -144,7 +191,7 @@ $ ->
         $("#loadDiv").toggle()
         $("#timeDiv").html("Rendered with " + numberOfWorkers + " workers in " + (Date.now() - startTime) / 1000 + " Seconds")
     , false)
-    worker.postMessage(JSON.stringify({startH, startW: 0, endH, endW: 500, width, height, cam, lights}))
+    worker.postMessage(JSON.stringify({startH, startW: 0, endH, endW: 500, width, height, cam, world}))
 
   render = (webWorkers) ->
     startTime = Date.now()
