@@ -6,7 +6,7 @@ class @Plane extends Geometry
     super material
   hit: (ray) =>
     t = @a.subPoint(ray.o).dot(@n) / ray.d.dot(@n)
-    if t > epsilon new Hit(t, ray, this, @n) else null
+    if t > epsilon then new Hit(t, ray, this, @n) else null
 
 class @AxisAlignedBox extends Geometry
   constructor: (material, @lbf = new Point3(-0.5, -0.5, -0.5), @run = new Point3(0.5, 0.5, 0.5)) ->
@@ -36,30 +36,30 @@ class @AxisAlignedBox extends Geometry
 
     if tx_min > ty_min
       t0 = tx_min
-      face_in = (a >= 0.0) ? 0: 3
+      face_in = if a >= 0.0 then 3 else 0
     else
       t0 = ty_min
-      face_in = (b >= 0.0) ? 1: 4
+      face_in = if b >= 0.0 then 1 else 4
     if tz_min > t0
       t0 = tz_min
-      face_in = (c >= 0.0) ? 2: 5
+      face_in = if c >= 0.0 then 2 else 5
     if tx_max < ty_max
       t1 = tx_max
-      face_out = (a >= 0.0) ? 3: 0
+      face_out = if a >= 0.0 then 3 else 0
     else
       t1 = ty_max
-      face_out = (b >= 0.0) ? 4: 1
+      face_out = if b >= 0.0 then 4 else 1
     if tz_max < t1
       t1 = tz_max
-      face_out = (c >= 0.0) ? 5: 2
+      face_out = if c >= 0.0 then 5 else 2
     if t0 < t1 and t1 > epsilon
       if t0 > epsilon
-        return new Hit(t0, ray, this, getNormal(face_in))
+        return new Hit(t0, ray, this, AxisAlignedBox.getNormal(face_in))
       else
-        return new Hit(t1, ray, this, getNormal(face_out))
+        return new Hit(t1, ray, this, AxisAlignedBox.getNormal(face_out))
     null
 
-  getNormal: (face) ->
+  @getNormal = (face) ->
     switch face
       when 0 then return new Normal3(-1, 0, 0)
       when 1 then return new Normal3(0, -1, 0)

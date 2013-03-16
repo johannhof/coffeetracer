@@ -1,6 +1,5 @@
 $ = jQuery
 $ ->
-
   $("#loadDiv").toggle()
   #######Objects#######
   nodeHTML = $("#nodeHTMLExample").html()
@@ -8,9 +7,7 @@ $ ->
   boxHTML = $("#boxHTMLExample").html()
   planeHTML = $('#planeHTMLExample').html()
   $("#addObjectButton").click ->
-    $("#objectsDiv").append(getObjectHTML($("#selectObject").val()))
-    $(".removeButton").click ->
-      alert "test"
+    $("#objects").append(getObjectHTML($("#selectObject").val()))
   getObjectHTML = (className) ->
     switch className
       when "Node" then return nodeHTML
@@ -43,9 +40,9 @@ $ ->
     else alert "Fail"
 
   parseCameraDiv = ->
-    e = new Point3($("#camera_e_x").val(), $("#camera_e_y").val(), $("#camera_e_z").val())
-    g = new Vector3($("#camera_g_x").val(), $("#camera_g_y").val(), $("#camera_g_z").val())
-    t = new Vector3($("#camera_t_x").val(), $("#camera_t_y").val(), $("#camera_t_z").val())
+    e = new Point3(parseFloat($("#camera_e_x").val()), parseFloat($("#camera_e_y").val()), parseFloat($("#camera_e_z").val()))
+    g = new Vector3(parseFloat($("#camera_g_x").val()), parseFloat($("#camera_g_y").val()), parseFloat($("#camera_g_z").val()))
+    t = new Vector3(parseFloat($("#camera_t_x").val()), parseFloat($("#camera_t_y").val()), parseFloat($("#camera_t_z").val()))
     aOrS = $("#cameraSpec input")[0].value
     if $("#selectCamera")[0].value is "PerspectiveCamera"
       return new PerspectiveCamera(e, g, t, Math.PI / aOrS)
@@ -67,14 +64,47 @@ $ ->
 
   #######Parsing#######
   cam = null;
+  lights = null;
   world = null;
   parseAmbientLight = ->
     ambientDiv = $("#ambientLight")
-    new Color(parseFloat($(ambientDiv).children(".redInput").val()), parseFloat($(ambientDiv).children(".greenInput").val()), parseFloat($(ambientDiv).children(".blueInput").val()))
+    new Color(parseFloat($(ambientDiv).children(".redInput").val()),
+              parseFloat($(ambientDiv).children(".greenInput").val()),
+              parseFloat($(ambientDiv).children(".blueInput").val()))
+
+  parseObjects = ->
+    objectDivs = $("#objects").children("div")
+    (parseObjectDiv objectDiv for objectDiv in objectDivs)
+
+  parseObjectDiv = (objectDiv) ->
+    objectClass = $(objectDiv).attr "class"
+    material = new PhongMaterial(new Color(1, 0, 0), new Color(1, 1, 1), 20)
+    objectContainer = $(objectDiv).children(".objectContainer")[0]
+    if not objectContainer
+      switch objectClass
+        when "plane" then return new Plane(material)
+        when "box" then return new AxisAlignedBox(material)
+        when "sphere" then return new Sphere(material)
+    else
+      switch objectClass
+        when "plane"
+          a = new Point3(parseFloat($(objectContainer).children(".planeAX").val()),parseFloat($(objectContainer).children(".planeAY").val()),parseFloat($(objectContainer).children(".planeAZ").val()))
+          n = new Vector3(parseFloat($(objectContainer).children(".planeNX").val()),parseFloat($(objectContainer).children(".planeNY").val()),parseFloat($(objectContainer).children(".planeNZ").val()))
+          return new Plane(material,a,n)
+        when "box"
+          lbf = new Point3(parseFloat($(objectContainer).children(".boxLBFX").val()),parseFloat($(objectContainer).children(".boxLBFY").val()),parseFloat($(objectContainer).children(".boxLBFZ").val()))
+          run = new Point3(parseFloat($(objectContainer).children(".boxRUNX").val()),parseFloat($(objectContainer).children(".boxRUNY").val()),parseFloat($(objectContainer).children(".boxRUNZ").val()))
+          return new AxisAlignedBox(material,lbf,run)
+        when "sphere"
+          c = new Point3(parseFloat($(objectContainer).children(".sphereCenterX").val()),parseFloat($(objectContainer).children(".sphereCenterY").val()),parseFloat($(objectContainer).children(".sphereCenterZ").val()))
+          r = parseFloat($(objectContainer).children(".sphereRadius").val())
+          return new Sphere(material,c,r)
 
   parseBackgroundColor = ->
     worldDiv = $("#worldDiv")
-    new Color(parseFloat($(worldDiv).children(".redInput").val()), parseFloat($(worldDiv).children(".greenInput").val()), parseFloat($(worldDiv).children(".blueInput").val()))
+    new Color(parseFloat($(worldDiv).children(".redInput").val()),
+              parseFloat($(worldDiv).children(".greenInput").val()),
+              parseFloat($(worldDiv).children(".blueInput").val()))
 
   parseLights = ->
     lightDivs = $("#lightsDiv").children("div")
@@ -82,18 +112,26 @@ $ ->
 
   parseLightDiv = (lightDiv) ->
     lightClass = $(lightDiv).attr "class"
-    color = new Color(parseFloat($(lightDiv).children(".redInput").val()), parseFloat($(lightDiv).children(".greenInput").val()), parseFloat($(lightDiv).children(".blueInput").val()))
+    color = new Color(parseFloat($(lightDiv).children(".redInput").val()),
+                      parseFloat($(lightDiv).children(".greenInput").val()),
+                      parseFloat($(lightDiv).children(".blueInput").val()))
     shadows = $(lightDiv).children(".lightCheck").is ":checked"
-    position = new Point3(parseFloat($(lightDiv).children(".posX").val()), parseFloat($(lightDiv).children(".posY").val()), parseFloat($(lightDiv).children(".posZ").val()))
+    position = new Point3(parseFloat($(lightDiv).children(".posX").val()),
+                          parseFloat($(lightDiv).children(".posY").val()),
+                          parseFloat($(lightDiv).children(".posZ").val()))
     if lightClass is "pointLight" then return new PointLight(color, shadows, position)
-    direction = new Vector3(parseFloat($(lightDiv).children(".dirX").val()), parseFloat($(lightDiv).children(".dirY").val()), parseFloat($(lightDiv).children(".dirZ").val()))
+    direction = new Vector3(parseFloat($(lightDiv).children(".dirX").val()),
+                            parseFloat($(lightDiv).children(".dirY").val()),
+                            parseFloat($(lightDiv).children(".dirZ").val()))
     if lightClass is "directionalLight" then return new DirectionalLight(color, shadows, direction)
     new SpotLight(color, shadows, position, direction, Math.PI / parseFloat($(lightDiv).children(".halfAngle").val()))
 
   parseData = ->
-    objects = [new Node(Transform.Scaling(1, 1, 1), [new Sphere(new PhongMaterial(new Color(1, 0, 0), new Color(1, 1, 1), 20))], null)]
+    objects = parseObjects()
     cam = parseCameraDiv()
-    world = new World(parseBackgroundColor(), objects, parseLights(), parseAmbientLight(), parseFloat($("#worldDiv").children(".indexOfRefraction").val()))
+    lights = parseLights()
+    world = new World(parseBackgroundColor(), objects, lights, parseAmbientLight(),
+                      parseFloat($("#worldDiv").children(".indexOfRefraction").val()))
 
   startWorker = (number, numberOfWorkers)->
     startH = width / numberOfWorkers * number
@@ -104,9 +142,9 @@ $ ->
       if numberOfWorkers is ++numberOfFinishedWorkers
         ctx.putImageData(imgData, 0, 0)
         $("#loadDiv").toggle()
-        alert("Time: " + (Date.now() - startTime) / 1000)
+        $("#timeDiv").html("Rendered with " + numberOfWorkers + " workers in " + (Date.now() - startTime) / 1000 + " Seconds")
     , false)
-    worker.postMessage(JSON.stringify({startH, startW: 0, endH, endW: 500, width, height, cam}))
+    worker.postMessage(JSON.stringify({startH, startW: 0, endH, endW: 500, width, height, cam, lights}))
 
   render = (webWorkers) ->
     startTime = Date.now()
@@ -124,7 +162,7 @@ $ ->
           imgData.data[(x * height + height - y - 1) * 4 + 1] = c.g * 255.0
           imgData.data[(x * height + height - y - 1) * 4 + 2] = c.b * 255.0
       ctx.putImageData(imgData, 0, 0)
-      alert("Time: " + (Date.now() - startTime) / 1000)
+      $("#timeDiv").html("Rendered in " + (Date.now() - startTime) / 1000 + " Seconds")
 
   extractImageData = (newImgData, sx, sy, ex, ey) ->
     for x in [sx..ex] by 1

@@ -5,17 +5,14 @@
   $ = jQuery;
 
   $(function() {
-    var boxHTML, cam, canvas, ctx, directionalLightHTML, extractImageData, getLightHTML, getObjectHTML, height, imgData, nodeHTML, numberOfFinishedWorkers, parseAmbientLight, parseBackgroundColor, parseCameraDiv, parseData, parseLightDiv, parseLights, planeHTML, pointLightHTML, render, sphereHTML, spotLightHTML, startTime, startWorker, width, world;
+    var boxHTML, cam, canvas, ctx, directionalLightHTML, extractImageData, getLightHTML, getObjectHTML, height, imgData, lights, nodeHTML, numberOfFinishedWorkers, parseAmbientLight, parseBackgroundColor, parseCameraDiv, parseData, parseLightDiv, parseLights, parseObjectDiv, parseObjects, planeHTML, pointLightHTML, render, sphereHTML, spotLightHTML, startTime, startWorker, width, world;
     $("#loadDiv").toggle();
     nodeHTML = $("#nodeHTMLExample").html();
     sphereHTML = $("#sphereHTMLExample").html();
     boxHTML = $("#boxHTMLExample").html();
     planeHTML = $('#planeHTMLExample').html();
     $("#addObjectButton").click(function() {
-      $("#objectsDiv").append(getObjectHTML($("#selectObject").val()));
-      return $(".removeButton").click(function() {
-        return alert("test");
-      });
+      return $("#objects").append(getObjectHTML($("#selectObject").val()));
     });
     getObjectHTML = function(className) {
       switch (className) {
@@ -60,9 +57,9 @@
     });
     parseCameraDiv = function() {
       var aOrS, e, g, t;
-      e = new Point3($("#camera_e_x").val(), $("#camera_e_y").val(), $("#camera_e_z").val());
-      g = new Vector3($("#camera_g_x").val(), $("#camera_g_y").val(), $("#camera_g_z").val());
-      t = new Vector3($("#camera_t_x").val(), $("#camera_t_y").val(), $("#camera_t_z").val());
+      e = new Point3(parseFloat($("#camera_e_x").val()), parseFloat($("#camera_e_y").val()), parseFloat($("#camera_e_z").val()));
+      g = new Vector3(parseFloat($("#camera_g_x").val()), parseFloat($("#camera_g_y").val()), parseFloat($("#camera_g_z").val()));
+      t = new Vector3(parseFloat($("#camera_t_x").val()), parseFloat($("#camera_t_y").val()), parseFloat($("#camera_t_z").val()));
       aOrS = $("#cameraSpec input")[0].value;
       if ($("#selectCamera")[0].value === "PerspectiveCamera") {
         return new PerspectiveCamera(e, g, t, Math.PI / aOrS);
@@ -80,11 +77,53 @@
     numberOfFinishedWorkers = 0;
     startTime = 0;
     cam = null;
+    lights = null;
     world = null;
     parseAmbientLight = function() {
       var ambientDiv;
       ambientDiv = $("#ambientLight");
       return new Color(parseFloat($(ambientDiv).children(".redInput").val()), parseFloat($(ambientDiv).children(".greenInput").val()), parseFloat($(ambientDiv).children(".blueInput").val()));
+    };
+    parseObjects = function() {
+      var objectDiv, objectDivs, _i, _len, _results;
+      objectDivs = $("#objects").children("div");
+      _results = [];
+      for (_i = 0, _len = objectDivs.length; _i < _len; _i++) {
+        objectDiv = objectDivs[_i];
+        _results.push(parseObjectDiv(objectDiv));
+      }
+      return _results;
+    };
+    parseObjectDiv = function(objectDiv) {
+      var a, c, lbf, material, n, objectClass, objectContainer, r, run;
+      objectClass = $(objectDiv).attr("class");
+      material = new PhongMaterial(new Color(1, 0, 0), new Color(1, 1, 1), 20);
+      objectContainer = $(objectDiv).children(".objectContainer")[0];
+      if (!objectContainer) {
+        switch (objectClass) {
+          case "plane":
+            return new Plane(material);
+          case "box":
+            return new AxisAlignedBox(material);
+          case "sphere":
+            return new Sphere(material);
+        }
+      } else {
+        switch (objectClass) {
+          case "plane":
+            a = new Point3(parseFloat($(objectContainer).children(".planeAX").val()), parseFloat($(objectContainer).children(".planeAY").val()), parseFloat($(objectContainer).children(".planeAZ").val()));
+            n = new Vector3(parseFloat($(objectContainer).children(".planeNX").val()), parseFloat($(objectContainer).children(".planeNY").val()), parseFloat($(objectContainer).children(".planeNZ").val()));
+            return new Plane(material, a, n);
+          case "box":
+            lbf = new Point3(parseFloat($(objectContainer).children(".boxLBFX").val()), parseFloat($(objectContainer).children(".boxLBFY").val()), parseFloat($(objectContainer).children(".boxLBFZ").val()));
+            run = new Point3(parseFloat($(objectContainer).children(".boxRUNX").val()), parseFloat($(objectContainer).children(".boxRUNY").val()), parseFloat($(objectContainer).children(".boxRUNZ").val()));
+            return new AxisAlignedBox(material, lbf, run);
+          case "sphere":
+            c = new Point3(parseFloat($(objectContainer).children(".sphereCenterX").val()), parseFloat($(objectContainer).children(".sphereCenterY").val()), parseFloat($(objectContainer).children(".sphereCenterZ").val()));
+            r = parseFloat($(objectContainer).children(".sphereRadius").val());
+            return new Sphere(material, c, r);
+        }
+      }
     };
     parseBackgroundColor = function() {
       var worldDiv;
@@ -120,9 +159,10 @@
     };
     parseData = function() {
       var objects;
-      objects = [new Node(Transform.Scaling(1, 1, 1), [new Sphere(new PhongMaterial(new Color(1, 0, 0), new Color(1, 1, 1), 20))], null)];
+      objects = parseObjects();
       cam = parseCameraDiv();
-      return world = new World(parseBackgroundColor(), objects, parseLights(), parseAmbientLight(), parseFloat($("#worldDiv").children(".indexOfRefraction").val()));
+      lights = parseLights();
+      return world = new World(parseBackgroundColor(), objects, lights, parseAmbientLight(), parseFloat($("#worldDiv").children(".indexOfRefraction").val()));
     };
     startWorker = function(number, numberOfWorkers) {
       var endH, startH, worker;
@@ -134,7 +174,7 @@
         if (numberOfWorkers === ++numberOfFinishedWorkers) {
           ctx.putImageData(imgData, 0, 0);
           $("#loadDiv").toggle();
-          return alert("Time: " + (Date.now() - startTime) / 1000);
+          return $("#timeDiv").html("Rendered with " + numberOfWorkers + " workers in " + (Date.now() - startTime) / 1000 + " Seconds");
         }
       }, false);
       return worker.postMessage(JSON.stringify({
@@ -144,7 +184,8 @@
         endW: 500,
         width: width,
         height: height,
-        cam: cam
+        cam: cam,
+        lights: lights
       }));
     };
     render = function(webWorkers) {
@@ -169,7 +210,7 @@
           }
         }
         ctx.putImageData(imgData, 0, 0);
-        return alert("Time: " + (Date.now() - startTime) / 1000);
+        return $("#timeDiv").html("Rendered in " + (Date.now() - startTime) / 1000 + " Seconds");
       }
     };
     extractImageData = function(newImgData, sx, sy, ex, ey) {
