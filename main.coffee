@@ -30,8 +30,9 @@ $ ->
       $(div).remove()
     $(div).children(".selectMaterial").change ->
       $(div).children(".materialContainer").html(getMaterialHTML(this.value))
+    $(div).children(".addNodeObject").click ->
+      $(div).children(".objects").append(getObjectHTML($(div).children(".nodeSelectObject").val()))
     div
-
 
   getMaterialHTML = (materialName) ->
     switch materialName
@@ -74,9 +75,9 @@ $ ->
                     parseFloat($("#camera_t_z").val()))
     aOrS = $("#cameraSpec input")[0].value
     if $("#selectCamera")[0].value is "PerspectiveCamera"
-      return new PerspectiveCamera(e, g, t, Math.PI / aOrS)
+      new PerspectiveCamera(e, g, t, Math.PI / aOrS)
     else if $("#selectCamera")[0].value is "OrthographicCamera"
-      return new OrthographicCamera(e, g, t, aOrS)
+      new OrthographicCamera(e, g, t, aOrS)
 
   #######Canvas Setup########
   canvas = document.getElementById "mainCanvas"

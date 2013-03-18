@@ -44,6 +44,9 @@
       $(div).children(".selectMaterial").change(function() {
         return $(div).children(".materialContainer").html(getMaterialHTML(this.value));
       });
+      $(div).children(".addNodeObject").click(function() {
+        return $(div).children(".objects").append(getObjectHTML($(div).children(".nodeSelectObject").val()));
+      });
       return div;
     };
     getMaterialHTML = function(materialName) {

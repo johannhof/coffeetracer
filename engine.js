@@ -293,7 +293,7 @@
     }
 
     TransparentMaterial.prototype.colorFor = function(hit, world, tracer) {
-      var R, R0, color, cosI, cosT, n1, n2, normal, recursionCounter, t, tir;
+      var R, R0, color, cosI, cosT, n1, n2, normal, t, tir;
       if (this.recursionCounter-- <= 0) {
         return world.backgroundColor;
       }
@@ -318,12 +318,12 @@
       }
       if (R !== 1) {
         t = hit.ray.d.mul(n1 / n2).add(normal.mul(cosI * (n1 / n2) - cosT));
-        color = (tracer.colorFor(new Ray(hit.ray.at(hit.t), hit.ray.d.add(normal.mul(cosI * 2)))).mul(R)).add(tracer.colorFor(new Ray(hit.ray.at(hit.t), t)).mulNumber(1 - R));
-        recursionCounter = this.maxDepth;
+        color = (tracer.colorFor(new Ray(hit.ray.at(hit.t), hit.ray.d.add(normal.mul(cosI * 2)))).mulNumber(R)).add(tracer.colorFor(new Ray(hit.ray.at(hit.t), t)).mulNumber(1 - R));
+        this.recursionCounter = this.maxDepth;
         return color;
       } else {
         color = tracer.colorFor(new Ray(hit.ray.at(hit.t), hit.ray.d.add(normal.mul(cosI * 2))));
-        recursionCounter = this.maxDepth;
+        this.recursionCounter = this.maxDepth;
         return color;
       }
     };

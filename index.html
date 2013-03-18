@@ -21,7 +21,6 @@
         </div>
         <canvas id="mainCanvas" width="500" height="500"></canvas>
         <br>
-
         <div class="input-prepend">
             <label class="add-on" for="widthInput"><i class="icon-resize-horizontal"></i></label>
             <input class="span1" type="text" id="widthInput" placeholder="Width" value="500" size="4">
@@ -31,12 +30,10 @@
             <input class="span1" type="text" id="heightInput" placeholder="Height" size="4" value="500">
         </div>
         <br>
-
         <div class="input-prepend">
             <label class="add-on" for="webworkers">Webworkers?</label>
             <input type="checkbox" id="webworkers" checked>
         </div>
-        <button class="btn" id="revertButton"><i class="icon-reply"></i> Revert Changes</button>
         <button class="btn btn-large btn-success" id="goButton"><i class="icon-cogs"></i> Render Image</button>
         <div id="timeDiv"></div>
     </div>
@@ -235,19 +232,22 @@
                 <option value="Plane">Plane</option>
                 <option value="Triangle">Triangle</option>
             </select>
-            <button class="btn">Add</button>
+            <button class="btn addNodeObject">Add</button>
+        </div>
+        <div class="objects">
+
         </div>
         <br>
         Transformations:
         <div class="input-append">
-            <select class="nodeSelectObject">
+            <select class="nodeTransformationObject">
                 <option value="Scaling">Scaling</option>
                 <option value="Translation">Translation</option>
                 <option value="X-Rotation">X-Rotation</option>
                 <option value="Y-Rotation">Y-Rotation</option>
                 <option value="Z-Rotation">Z-Rotation</option>
             </select>
-            <button class="btn">Add</button>
+            <button class="btn addTransformationObject">Add</button>
         </div>
     </div>
 </div>
