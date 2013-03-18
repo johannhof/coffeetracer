@@ -32,15 +32,15 @@ class @PhongMaterial
 class @ReflectiveMaterial
   constructor: (@diffuse, @specular, @exponent, @reflection) ->
   colorFor: (hit, world, tracer) =>
-    returnColor = @diffuse.mul(world.ambient)
+    returnColor = @diffuse.mulColor(world.ambient)
     pointOnRay = hit.ray.at(hit.t)
     for l in world.lights
       if l.illuminates(pointOnRay, world)
-        spec = @specular.mul(l.color.mul(Math.pow(Math.max(hit.ray.d.dot(l.directionFrom(pointOnRay).reflectedOn(hit.normal).mul(-1.0)),
+        spec = @specular.mulColor(l.color.mulNumber(Math.pow(Math.max(hit.ray.d.dot(l.directionFrom(pointOnRay).reflectedOn(hit.normal).mul(-1.0)),
                                                            0), @exponent)))
-        returnColor = returnColor.add(@diffuse.mul(l.color.mul(Math.max(l.directionFrom(pointOnRay).dot(hit.normal),
+        returnColor = returnColor.add(@diffuse.mulColor(l.color.mulNumber(Math.max(l.directionFrom(pointOnRay).dot(hit.normal),
                                                                         0))).add(spec))
-    reflec = @reflection.mul(tracer.colorFor(new Ray(pointOnRay,
+    reflec = @reflection.mulColor(tracer.colorFor(new Ray(pointOnRay,
                                                      hit.ray.d.add(hit.normal.mul(hit.ray.d.mul(-1).dot(hit.normal) * 2)))))
     returnColor.add(reflec)
 
@@ -71,7 +71,7 @@ class @TransparentMaterial
       t = hit.ray.d.mul(n1 / n2).add(normal.mul(cosI * (n1 / n2) - cosT))
       color = (tracer.colorFor(new Ray(hit.ray.at(hit.t),
                                        hit.ray.d.add(normal.mul(cosI * 2)))).mul(R)).add(tracer.colorFor(new Ray(hit.ray.at(hit.t),
-                                                                                                                 t)).mul(1 - R))
+                                                                                                                 t)).mulNumber(1 - R))
       recursionCounter = @maxDepth
       return color
     else

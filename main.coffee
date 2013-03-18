@@ -40,6 +40,8 @@ $ ->
       when "PhongMaterial" then PhongMaterialHTML
       when "ReflectiveMaterial" then ReflectiveMaterialHTML
       when "TransparentMaterial" then TransparentMaterialHTML
+      else
+        null
 
   #######Lights#######
   pointLightHTML = $("#pointLightExample").html()
@@ -49,9 +51,9 @@ $ ->
     $("#lightsDiv").append(getLightHTML($("#selectLight").val()))
   getLightHTML = (lightName) ->
     switch lightName
-      when "PointLight" then pointLightHTML
-      when "SpotLight" then spotLightHTML
-      when "DirectionalLight" then directionalLightHTML
+      when "PointLight" then createObjectDiv "pointLight", pointLightHTML
+      when "SpotLight" then createObjectDiv "spotLight", spotLightHTML
+      when "DirectionalLight" then createObjectDiv "directionalLight", directionalLightHTML
       else
         lightName + "not valid"
 
@@ -142,12 +144,33 @@ $ ->
     switch materialClass
       when "SingleColorMaterial"
         new SingleColorMaterial(new Color(parseFloat($(materialContainer).children(".redInput").val()),
-                                parseFloat($(materialContainer).children(".greenInput").val()),
-                                parseFloat($(materialContainer).children(".blueInput").val())))
+                                          parseFloat($(materialContainer).children(".greenInput").val()),
+                                          parseFloat($(materialContainer).children(".blueInput").val())))
       when "LambertMaterial"
         new LambertMaterial(new Color(parseFloat($(materialContainer).children(".redInput").val()),
-                            parseFloat($(materialContainer).children(".greenInput").val()),
-                            parseFloat($(materialContainer).children(".blueInput").val())))
+                                      parseFloat($(materialContainer).children(".greenInput").val()),
+                                      parseFloat($(materialContainer).children(".blueInput").val())))
+      when "PhongMaterial"
+        new PhongMaterial(new Color(parseFloat($(materialContainer).children(".diffuse.redInput").val()),
+                                    parseFloat($(materialContainer).children(".diffuse.greenInput").val()),
+                                    parseFloat($(materialContainer).children(".diffuse.blueInput").val())),
+                          new Color(parseFloat($(materialContainer).children(".specular.redInput").val()),
+                                    parseFloat($(materialContainer).children(".specular.greenInput").val()),
+                                    parseFloat($(materialContainer).children(".specular.blueInput").val())),
+                          parseFloat($(materialContainer).children(".exponent").val()))
+      when "ReflectiveMaterial"
+        new ReflectiveMaterial(new Color(parseFloat($(materialContainer).children(".diffuse.redInput").val()),
+                                         parseFloat($(materialContainer).children(".diffuse.greenInput").val()),
+                                         parseFloat($(materialContainer).children(".diffuse.blueInput").val())),
+                               new Color(parseFloat($(materialContainer).children(".specular.redInput").val()),
+                                         parseFloat($(materialContainer).children(".specular.greenInput").val()),
+                                         parseFloat($(materialContainer).children(".specular.blueInput").val())),
+                               parseFloat($(materialContainer).children(".exponent").val()),
+                               new Color(parseFloat($(materialContainer).children(".reflection.redInput").val()),
+                                         parseFloat($(materialContainer).children(".reflection.greenInput").val()),
+                                         parseFloat($(materialContainer).children(".reflection.blueInput").val())))
+      when "TransparentMaterial"
+        new TransparentMaterial(parseFloat($(materialContainer).children(".indexOfRefraction").val()))
 
   parseBackgroundColor = ->
     worldDiv = $("#worldDiv")
@@ -164,7 +187,7 @@ $ ->
     color = new Color(parseFloat($(lightDiv).children(".redInput").val()),
                       parseFloat($(lightDiv).children(".greenInput").val()),
                       parseFloat($(lightDiv).children(".blueInput").val()))
-    shadows = $(lightDiv).children(".lightCheck").is ":checked"
+    shadows = $(lightDiv).children(".shadowCheck").is ":checked"
     position = new Point3(parseFloat($(lightDiv).children(".posX").val()),
                           parseFloat($(lightDiv).children(".posY").val()),
                           parseFloat($(lightDiv).children(".posZ").val()))
@@ -181,17 +204,17 @@ $ ->
                       parseFloat($("#worldDiv").children(".indexOfRefraction").val()))
 
   startWorker = (number, numberOfWorkers)->
-    startH = width / numberOfWorkers * number
-    endH = startH + width / numberOfWorkers
+    startW = width / numberOfWorkers * number
+    endW = startW + width / numberOfWorkers
     worker = new Worker('engine.js')
     worker.addEventListener('message', (e) ->
-      extractImageData(e.data.imgData, 0, startH, 500, endH)
+      extractImageData(e.data.imgData, startW, 0, endW, height)
       if numberOfWorkers is ++numberOfFinishedWorkers
         ctx.putImageData(imgData, 0, 0)
         $("#loadDiv").toggle()
         $("#timeDiv").html("Rendered with " + numberOfWorkers + " workers in " + (Date.now() - startTime) / 1000 + " Seconds")
     , false)
-    worker.postMessage(JSON.stringify({startH, startW: 0, endH, endW: 500, width, height, cam, world}))
+    worker.postMessage(JSON.stringify({startW, endW, width, height, cam, world}))
 
   render = (webWorkers) ->
     startTime = Date.now()

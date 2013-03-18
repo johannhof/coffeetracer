@@ -58,6 +58,8 @@
           return ReflectiveMaterialHTML;
         case "TransparentMaterial":
           return TransparentMaterialHTML;
+        default:
+          return null;
       }
     };
     pointLightHTML = $("#pointLightExample").html();
@@ -69,11 +71,11 @@
     getLightHTML = function(lightName) {
       switch (lightName) {
         case "PointLight":
-          return pointLightHTML;
+          return createObjectDiv("pointLight", pointLightHTML);
         case "SpotLight":
-          return spotLightHTML;
+          return createObjectDiv("spotLight", spotLightHTML);
         case "DirectionalLight":
-          return directionalLightHTML;
+          return createObjectDiv("directionalLight", directionalLightHTML);
         default:
           return lightName + "not valid";
       }
@@ -165,6 +167,12 @@
           return new SingleColorMaterial(new Color(parseFloat($(materialContainer).children(".redInput").val()), parseFloat($(materialContainer).children(".greenInput").val()), parseFloat($(materialContainer).children(".blueInput").val())));
         case "LambertMaterial":
           return new LambertMaterial(new Color(parseFloat($(materialContainer).children(".redInput").val()), parseFloat($(materialContainer).children(".greenInput").val()), parseFloat($(materialContainer).children(".blueInput").val())));
+        case "PhongMaterial":
+          return new PhongMaterial(new Color(parseFloat($(materialContainer).children(".diffuse.redInput").val()), parseFloat($(materialContainer).children(".diffuse.greenInput").val()), parseFloat($(materialContainer).children(".diffuse.blueInput").val())), new Color(parseFloat($(materialContainer).children(".specular.redInput").val()), parseFloat($(materialContainer).children(".specular.greenInput").val()), parseFloat($(materialContainer).children(".specular.blueInput").val())), parseFloat($(materialContainer).children(".exponent").val()));
+        case "ReflectiveMaterial":
+          return new ReflectiveMaterial(new Color(parseFloat($(materialContainer).children(".diffuse.redInput").val()), parseFloat($(materialContainer).children(".diffuse.greenInput").val()), parseFloat($(materialContainer).children(".diffuse.blueInput").val())), new Color(parseFloat($(materialContainer).children(".specular.redInput").val()), parseFloat($(materialContainer).children(".specular.greenInput").val()), parseFloat($(materialContainer).children(".specular.blueInput").val())), parseFloat($(materialContainer).children(".exponent").val()), new Color(parseFloat($(materialContainer).children(".reflection.redInput").val()), parseFloat($(materialContainer).children(".reflection.greenInput").val()), parseFloat($(materialContainer).children(".reflection.blueInput").val())));
+        case "TransparentMaterial":
+          return new TransparentMaterial(parseFloat($(materialContainer).children(".indexOfRefraction").val()));
       }
     };
     parseBackgroundColor = function() {
@@ -188,7 +196,7 @@
       var color, direction, lightClass, position, shadows;
       lightClass = $(lightDiv).attr("class");
       color = new Color(parseFloat($(lightDiv).children(".redInput").val()), parseFloat($(lightDiv).children(".greenInput").val()), parseFloat($(lightDiv).children(".blueInput").val()));
-      shadows = $(lightDiv).children(".lightCheck").is(":checked");
+      shadows = $(lightDiv).children(".shadowCheck").is(":checked");
       position = new Point3(parseFloat($(lightDiv).children(".posX").val()), parseFloat($(lightDiv).children(".posY").val()), parseFloat($(lightDiv).children(".posZ").val()));
       if (lightClass === "pointLight") {
         return new PointLight(color, shadows, position);
@@ -204,12 +212,12 @@
       return world = new World(parseBackgroundColor(), parseObjects(), parseLights(), parseAmbientLight(), parseFloat($("#worldDiv").children(".indexOfRefraction").val()));
     };
     startWorker = function(number, numberOfWorkers) {
-      var endH, startH, worker;
-      startH = width / numberOfWorkers * number;
-      endH = startH + width / numberOfWorkers;
+      var endW, startW, worker;
+      startW = width / numberOfWorkers * number;
+      endW = startW + width / numberOfWorkers;
       worker = new Worker('engine.js');
       worker.addEventListener('message', function(e) {
-        extractImageData(e.data.imgData, 0, startH, 500, endH);
+        extractImageData(e.data.imgData, startW, 0, endW, height);
         if (numberOfWorkers === ++numberOfFinishedWorkers) {
           ctx.putImageData(imgData, 0, 0);
           $("#loadDiv").toggle();
@@ -217,10 +225,8 @@
         }
       }, false);
       return worker.postMessage(JSON.stringify({
-        startH: startH,
-        startW: 0,
-        endH: endH,
-        endW: 500,
+        startW: startW,
+        endW: endW,
         width: width,
         height: height,
         cam: cam,

@@ -84,7 +84,7 @@
 
     DirectionalLight.prototype.illuminates = function(point, world) {
       var hit, ray;
-      if (!this.castsShadows) {
+      if (this.castsShadows == null) {
         return true;
       }
       ray = new Ray(new Point3(this.direction.x, this.direction.y, this.direction.z), this.direction.normalized());
@@ -147,7 +147,7 @@
       ray = new Ray(this.position, point.subPoint(this.position).normalized());
       hit = world.hit(ray);
       alpha = Math.acos(this.direction.dot(point.subPoint(this.position)) / (this.direction.magnitude * point.subPoint(this.position).magnitude));
-      if (alpha <= this.halfAngle && (this.castsShadows === false || !hit || Math.round(hit.t * 100000) / 100000 >= Math.round(ray.tOf(point) * 100000) / 100000)) {
+      if (alpha <= this.halfAngle && (!this.castsShadows || !hit || Math.round(hit.t * 100000) / 100000 >= Math.round(ray.tOf(point) * 100000) / 100000)) {
         return true;
       }
       return false;
@@ -261,17 +261,17 @@
 
     ReflectiveMaterial.prototype.colorFor = function(hit, world, tracer) {
       var l, pointOnRay, reflec, returnColor, spec, _i, _len, _ref;
-      returnColor = this.diffuse.mul(world.ambient);
+      returnColor = this.diffuse.mulColor(world.ambient);
       pointOnRay = hit.ray.at(hit.t);
       _ref = world.lights;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         l = _ref[_i];
         if (l.illuminates(pointOnRay, world)) {
-          spec = this.specular.mul(l.color.mul(Math.pow(Math.max(hit.ray.d.dot(l.directionFrom(pointOnRay).reflectedOn(hit.normal).mul(-1.0)), 0), this.exponent)));
-          returnColor = returnColor.add(this.diffuse.mul(l.color.mul(Math.max(l.directionFrom(pointOnRay).dot(hit.normal), 0))).add(spec));
+          spec = this.specular.mulColor(l.color.mulNumber(Math.pow(Math.max(hit.ray.d.dot(l.directionFrom(pointOnRay).reflectedOn(hit.normal).mul(-1.0)), 0), this.exponent)));
+          returnColor = returnColor.add(this.diffuse.mulColor(l.color.mulNumber(Math.max(l.directionFrom(pointOnRay).dot(hit.normal), 0))).add(spec));
         }
       }
-      reflec = this.reflection.mul(tracer.colorFor(new Ray(pointOnRay, hit.ray.d.add(hit.normal.mul(hit.ray.d.mul(-1).dot(hit.normal) * 2)))));
+      reflec = this.reflection.mulColor(tracer.colorFor(new Ray(pointOnRay, hit.ray.d.add(hit.normal.mul(hit.ray.d.mul(-1).dot(hit.normal) * 2)))));
       return returnColor.add(reflec);
     };
 
@@ -318,7 +318,7 @@
       }
       if (R !== 1) {
         t = hit.ray.d.mul(n1 / n2).add(normal.mul(cosI * (n1 / n2) - cosT));
-        color = (tracer.colorFor(new Ray(hit.ray.at(hit.t), hit.ray.d.add(normal.mul(cosI * 2)))).mul(R)).add(tracer.colorFor(new Ray(hit.ray.at(hit.t), t)).mul(1 - R));
+        color = (tracer.colorFor(new Ray(hit.ray.at(hit.t), hit.ray.d.add(normal.mul(cosI * 2)))).mul(R)).add(tracer.colorFor(new Ray(hit.ray.at(hit.t), t)).mulNumber(1 - R));
         recursionCounter = this.maxDepth;
         return color;
       } else {
@@ -1067,21 +1067,21 @@
   initialize = function(e) {
     var data;
     data = JSON.parse(e.data);
-    return render(data.startW, data.endW, data.startH, data.endH, data.width, data.height, restoreCam(data.cam), restoreWorld(data.world));
+    return render(data.startW, data.endW, data.width, data.height, restoreCam(data.cam), restoreWorld(data.world));
   };
 
   self.addEventListener('message', initialize, false);
 
-  render = function(startW, endW, startH, endH, width, height, cam, world) {
+  render = function(startW, endW, width, height, cam, world) {
     var c, imgData, tracer, x, y, _i, _j;
     imgData = [];
     tracer = new Tracer(world);
-    for (x = _i = startH; _i <= endH; x = _i += 1) {
-      for (y = _j = startW; _j <= endW; y = _j += 1) {
-        c = tracer.colorFor(cam.rayFor(width, height, x, y));
-        imgData[(y * height + x) * 4 + 0] = c.r * 255.0;
-        imgData[(y * height + x) * 4 + 1] = c.g * 255.0;
-        imgData[(y * height + x) * 4 + 2] = c.b * 255.0;
+    for (x = _i = startW; _i <= endW; x = _i += 1) {
+      for (y = _j = 0; _j <= height; y = _j += 1) {
+        c = tracer.colorFor(cam.rayFor(width, height, y, width - x - 1));
+        imgData[(x * height + y) * 4 + 0] = c.r * 255.0;
+        imgData[(x * height + y) * 4 + 1] = c.g * 255.0;
+        imgData[(x * height + y) * 4 + 2] = c.b * 255.0;
       }
     }
     return self.postMessage({

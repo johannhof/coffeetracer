@@ -69,18 +69,18 @@ restoreLights = (lights) ->
 
 initialize = (e) ->
   data = JSON.parse(e.data)
-  render(data.startW, data.endW, data.startH, data.endH, data.width, data.height, restoreCam(data.cam),
+  render(data.startW, data.endW, data.width, data.height, restoreCam(data.cam),
          restoreWorld(data.world))
 
 self.addEventListener('message', initialize, false)
 
-render = (startW, endW, startH, endH, width, height, cam, world) ->
+render = (startW, endW, width, height, cam, world) ->
   imgData = []
   tracer = new Tracer(world)
-  for x in [startH..endH] by 1
-    for y in [startW..endW] by 1
-      c = tracer.colorFor((cam.rayFor(width, height, x, y)))
-      imgData[(y * height + x) * 4 + 0] = c.r * 255.0
-      imgData[(y * height + x) * 4 + 1] = c.g * 255.0
-      imgData[(y * height + x) * 4 + 2] = c.b * 255.0
+  for x in [startW..endW] by 1
+    for y in [0..height] by 1
+      c = tracer.colorFor((cam.rayFor(width, height, y, width - x - 1)))
+      imgData[(x * height + y) * 4 + 0] = c.r * 255.0
+      imgData[(x * height + y) * 4 + 1] = c.g * 255.0
+      imgData[(x * height + y) * 4 + 2] = c.b * 255.0
   self.postMessage({imgData})
