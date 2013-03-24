@@ -21,6 +21,16 @@ restoreObject = (object) ->
     return new AxisAlignedBox(restoreMaterial(object.material), restorePoint(object.lbf), restorePoint(object.run))
   if object.c and object.r
     return new Sphere(restoreMaterial(object.material), restorePoint(object.c), parseFloat(object.r))
+  if object.geometries
+    return new Node(restoreTransformation(object.transformation), restoreObjects(object.geometries))
+
+restoreTransformation = (transformation) ->
+  new Transform(restoreMat4x4(transformation.m), restoreMat4x4(transformation.i))
+
+
+restoreMat4x4 = (matrix) ->
+  new Mat4x4(matrix.m11, matrix.m12, matrix.m13, matrix.m14, matrix.m21, matrix.m22, matrix.m23, matrix.m24, matrix.m31,
+             matrix.m32, matrix.m33, matrix.m34, matrix.m41, matrix.m42, matrix.m43, matrix.m44)
 
 restoreMaterial = (material) ->
   if material.indexOfRefraction

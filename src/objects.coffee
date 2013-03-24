@@ -61,13 +61,13 @@ class @AxisAlignedBox extends Geometry
 
   @getNormal = (face) ->
     switch face
-      when 0 then return new Normal3(-1, 0, 0)
-      when 1 then return new Normal3(0, -1, 0)
-      when 2 then return new Normal3(0, 0, -1)
-      when 3 then return new Normal3(1, 0, 0)
-      when 4 then return new Normal3(0, 1, 0)
-      when 5 then return new Normal3(0, 0, 1)
-    null
+      when 0 then new Normal3(-1, 0, 0)
+      when 1 then new Normal3(0, -1, 0)
+      when 2 then new Normal3(0, 0, -1)
+      when 3 then new Normal3(1, 0, 0)
+      when 4 then new Normal3(0, 1, 0)
+      when 5 then new Normal3(0, 0, 1)
+      else null
 
 class @Sphere extends Geometry
   constructor: (material, @c = new Point3(0, 0, 0), @r = 1) ->

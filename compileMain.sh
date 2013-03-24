@@ -1,0 +1,1 @@
+coffee -c -w main.coffee

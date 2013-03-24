@@ -48,9 +48,8 @@ class @Tracer
     @recursionCounter = Tracer.maxDepth
     @world.backgroundColor
 
-class @Node extends Geometry
-  constructor: (@transformation, @geometries, material) ->
-    super material
+class @Node
+  constructor: (@transformation, @geometries) ->
   hit: (ray) =>
     r = new Ray(@transformation.i.xPoint(ray.o), @transformation.i.xVector(ray.d))
     temp = null
@@ -64,6 +63,7 @@ class @Node extends Geometry
       return new Hit(temp.t, ray, temp.geo,
                      @transformation.i.transpond().xVector(new Vector3(temp.normal.x, temp.normal.y,
                                                                        temp.normal.z)).asNormal())
+    null
 
 class @Transform
   constructor: (@m, @i) ->

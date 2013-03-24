@@ -5,62 +5,119 @@
   $ = jQuery;
 
   $(function() {
-    var LambertMaterialHTML, PhongMaterialHTML, ReflectiveMaterialHTML, SingleColorMaterialHTML, TransparentMaterialHTML, boxHTML, cam, canvas, createObjectDiv, ctx, directionalLightHTML, extractImageData, getLightHTML, getMaterialHTML, getObjectHTML, height, imgData, nodeHTML, numberOfFinishedWorkers, parseAmbientLight, parseBackgroundColor, parseCameraDiv, parseData, parseLightDiv, parseLights, parseMaterial, parseObjectDiv, parseObjects, planeHTML, pointLightHTML, render, sphereHTML, spotLightHTML, startTime, startWorker, width, world;
+    var addRemoveButtonHandler, boxHTML, cam, canvas, createLightDiv, createNodeDiv, createObjectDiv, createTransformationDiv, ctx, directionalLightHTML, extractImageData, getLightHTML, getMaterialHTML, getObjectHTML, getTransformHTML, height, imgData, lambertMaterialHTML, nodeHTML, numberOfFinishedWorkers, parseAmbientLight, parseBackgroundColor, parseCameraDiv, parseData, parseLightDiv, parseLights, parseMaterial, parseObjectDiv, parseObjects, parseTransformations, phongMaterialHTML, planeHTML, pointLightHTML, reflectiveMaterialHTML, render, scalingHTML, singleColorMaterialHTML, sphereHTML, spotLightHTML, startTime, startWorker, translationHTML, transparentMaterialHTML, width, world, xRotationHTML, yRotationHTML, zRotationHTML;
     $("#loadDiv").toggle();
     nodeHTML = $("#nodeHTMLExample").html();
     sphereHTML = $("#sphereHTMLExample").html();
     boxHTML = $("#boxHTMLExample").html();
     planeHTML = $("#planeHTMLExample").html();
-    SingleColorMaterialHTML = $("#SingleColorMaterialHTMLExample").html();
-    LambertMaterialHTML = $("#LambertMaterialHTMLExample").html();
-    PhongMaterialHTML = $("#PhongMaterialHTMLExample").html();
-    ReflectiveMaterialHTML = $("#ReflectiveMaterialHTMLExample").html();
-    TransparentMaterialHTML = $("#TransparentMaterialHTMLExample").html();
+    singleColorMaterialHTML = $("#SingleColorMaterialHTMLExample").html();
+    lambertMaterialHTML = $("#LambertMaterialHTMLExample").html();
+    phongMaterialHTML = $("#PhongMaterialHTMLExample").html();
+    reflectiveMaterialHTML = $("#ReflectiveMaterialHTMLExample").html();
+    transparentMaterialHTML = $("#TransparentMaterialHTMLExample").html();
+    scalingHTML = $("#ScalingHTMLExample").html();
+    translationHTML = $("#TranslationHTMLExample").html();
+    xRotationHTML = $("#X-RotationHTMLExample").html();
+    yRotationHTML = $("#Y-RotationHTMLExample").html();
+    zRotationHTML = $("#Z-RotationHTMLExample").html();
     $("#addObjectButton").click(function() {
       return $("#objects").append(getObjectHTML($("#selectObject").val()));
     });
-    getObjectHTML = function(className) {
+    getObjectHTML = function(className, isNodeObject) {
+      if (isNodeObject == null) {
+        isNodeObject = false;
+      }
       switch (className) {
         case "Node":
-          return createObjectDiv("node", nodeHTML);
+          return createNodeDiv;
         case "Sphere":
-          return createObjectDiv("sphere", sphereHTML);
+          return createObjectDiv("sphere", sphereHTML, isNodeObject);
         case "Box":
-          return createObjectDiv("box", boxHTML);
+          return createObjectDiv("box", boxHTML, isNodeObject);
         case "Plane":
-          return createObjectDiv("plane", planeHTML);
+          return createObjectDiv("plane", planeHTML, isNodeObject);
         default:
           return className + "not valid";
       }
     };
-    createObjectDiv = function(objectName, html) {
+    addRemoveButtonHandler = function(div) {
+      return $(div).children(".removeButton").click(function() {
+        return $(div).remove();
+      });
+    };
+    createObjectDiv = function(objectName, propertyHtml, isNodeObject) {
       var div;
       div = document.createElement("div");
       div.setAttribute("class", objectName);
-      $(div).append(html);
-      $(div).children(".removeButton").click(function() {
-        return $(div).remove();
-      });
+      $(div).css("background-color", "lightgrey").append($("#objectHTMLExample").html());
+      if (!isNodeObject) {
+        $(div).append(propertyHtml);
+      }
+      addRemoveButtonHandler(div);
       $(div).children(".selectMaterial").change(function() {
         return $(div).children(".materialContainer").html(getMaterialHTML(this.value));
       });
-      $(div).children(".addNodeObject").click(function() {
-        return $(div).children(".objects").append(getObjectHTML($(div).children(".nodeSelectObject").val()));
+      return div;
+    };
+    createLightDiv = function(lightName, lightHTML) {
+      var div;
+      div = document.createElement("div");
+      div.setAttribute("class", lightName);
+      $(div).css("background-color", "lightgrey").append(lightHTML);
+      addRemoveButtonHandler(div);
+      return div;
+    };
+    createNodeDiv = function() {
+      var div;
+      div = document.createElement("div");
+      div.setAttribute("class", "node");
+      $(div).css("background-color", "lightgrey").append(nodeHTML);
+      addRemoveButtonHandler(div);
+      $(div).children(".input-append").children(".addNodeObject").click(function() {
+        return $(div).children(".nodeContainer").append(getObjectHTML($(div).children(".input-append").children(".nodeSelectObject").val(), true));
+      });
+      $(div).children(".input-append").children(".addTransformation").click(function() {
+        return $(div).children(".transformationContainer").append(getTransformHTML($(div).children(".input-append").children(".nodeSelectTransformation").val()));
       });
       return div;
+    };
+    createTransformationDiv = function(name, transformationHTML) {
+      var div;
+      div = document.createElement("div");
+      div.setAttribute("class", name);
+      $(div).css("background-color", "lightgrey").append(transformationHTML);
+      addRemoveButtonHandler(div);
+      return div;
+    };
+    getTransformHTML = function(transformationName) {
+      switch (transformationName) {
+        case "Scaling":
+          return createTransformationDiv("scaling", scalingHTML);
+        case "Translation":
+          return createTransformationDiv("translation", translationHTML);
+        case "X-Rotation":
+          return createTransformationDiv("xRotation", xRotationHTML);
+        case "Y-Rotation":
+          return createTransformationDiv("yRotation", yRotationHTML);
+        case "Z-Rotation":
+          return createTransformationDiv("zRotation", zRotationHTML);
+        default:
+          return null;
+      }
     };
     getMaterialHTML = function(materialName) {
       switch (materialName) {
         case "SingleColorMaterial":
-          return SingleColorMaterialHTML;
+          return singleColorMaterialHTML;
         case "LambertMaterial":
-          return LambertMaterialHTML;
+          return lambertMaterialHTML;
         case "PhongMaterial":
-          return PhongMaterialHTML;
+          return phongMaterialHTML;
         case "ReflectiveMaterial":
-          return ReflectiveMaterialHTML;
+          return reflectiveMaterialHTML;
         case "TransparentMaterial":
-          return TransparentMaterialHTML;
+          return transparentMaterialHTML;
         default:
           return null;
       }
@@ -74,11 +131,11 @@
     getLightHTML = function(lightName) {
       switch (lightName) {
         case "PointLight":
-          return createObjectDiv("pointLight", pointLightHTML);
+          return createLightDiv("pointLight", pointLightHTML);
         case "SpotLight":
-          return createObjectDiv("spotLight", spotLightHTML);
+          return createLightDiv("spotLight", spotLightHTML);
         case "DirectionalLight":
-          return createObjectDiv("directionalLight", directionalLightHTML);
+          return createLightDiv("directionalLight", directionalLightHTML);
         default:
           return lightName + "not valid";
       }
@@ -120,9 +177,11 @@
       ambientDiv = $("#ambientLight");
       return new Color(parseFloat($(ambientDiv).children(".redInput").val()), parseFloat($(ambientDiv).children(".greenInput").val()), parseFloat($(ambientDiv).children(".blueInput").val()));
     };
-    parseObjects = function() {
-      var objectDiv, objectDivs, _i, _len, _results;
-      objectDivs = $("#objects").children("div");
+    parseObjects = function(objectDivs) {
+      var objectDiv, _i, _len, _results;
+      if (objectDivs == null) {
+        objectDivs = $("#objects").children("div");
+      }
       _results = [];
       for (_i = 0, _len = objectDivs.length; _i < _len; _i++) {
         objectDiv = objectDivs[_i];
@@ -143,6 +202,10 @@
             return new AxisAlignedBox(material);
           case "sphere":
             return new Sphere(material);
+          case "node":
+            return new Node(parseTransformations($(objectDiv).children(".transformationContainer")), parseObjects($(objectDiv).children(".nodeContainer").children("div")));
+          default:
+            return null;
         }
       } else {
         switch (objectClass) {
@@ -158,6 +221,8 @@
             c = new Point3(parseFloat($(objectContainer).children(".sphereCenterX").val()), parseFloat($(objectContainer).children(".sphereCenterY").val()), parseFloat($(objectContainer).children(".sphereCenterZ").val()));
             r = parseFloat($(objectContainer).children(".sphereRadius").val());
             return new Sphere(material, c, r);
+          default:
+            return null;
         }
       }
     };
@@ -176,7 +241,50 @@
           return new ReflectiveMaterial(new Color(parseFloat($(materialContainer).children(".diffuse.redInput").val()), parseFloat($(materialContainer).children(".diffuse.greenInput").val()), parseFloat($(materialContainer).children(".diffuse.blueInput").val())), new Color(parseFloat($(materialContainer).children(".specular.redInput").val()), parseFloat($(materialContainer).children(".specular.greenInput").val()), parseFloat($(materialContainer).children(".specular.blueInput").val())), parseFloat($(materialContainer).children(".exponent").val()), new Color(parseFloat($(materialContainer).children(".reflection.redInput").val()), parseFloat($(materialContainer).children(".reflection.greenInput").val()), parseFloat($(materialContainer).children(".reflection.blueInput").val())));
         case "TransparentMaterial":
           return new TransparentMaterial(parseFloat($(materialContainer).children(".indexOfRefraction").val()));
+        default:
+          return null;
       }
+    };
+    parseTransformations = function(transformationContainer) {
+      var firstTransformation, transformation, transformationDiv, transformationDivs, _i, _len;
+      firstTransformation = $(transformationContainer).children("div")[0];
+      transformation = (function() {
+        switch ($(firstTransformation).attr("class")) {
+          case "scaling":
+            return Transform.Scaling(parseFloat($(firstTransformation).children(".scalingX").val()), parseFloat($(firstTransformation).children(".scalingY").val()), parseFloat($(firstTransformation).children(".scalingZ").val()));
+          case "translation":
+            return Transform.Translation(parseFloat($(firstTransformation).children(".translationX").val()), parseFloat($(firstTransformation).children(".translationY").val()), parseFloat($(firstTransformation).children(".translationZ").val()));
+          case "xRotation":
+            return Transform.XRotation(parseFloat($(firstTransformation).children(".rotationAngle").val()) / 180 * Math.PI);
+          case "yRotation":
+            return Transform.YRotation(parseFloat($(firstTransformation).children(".rotationAngle").val()) / 180 * Math.PI);
+          case "zRotation":
+            return Transform.ZRotation(parseFloat($(firstTransformation).children(".rotationAngle").val()) / 180 * Math.PI);
+          default:
+            return Transform.Scaling(1, 1, 1);
+        }
+      })();
+      transformationDivs = $(transformationContainer).children("div").slice(1);
+      for (_i = 0, _len = transformationDivs.length; _i < _len; _i++) {
+        transformationDiv = transformationDivs[_i];
+        transformation = (function() {
+          switch ($(transformationDiv).attr("class")) {
+            case "scaling":
+              return transformation.scale(parseFloat($(transformationDiv).children(".scalingX").val()), parseFloat($(transformationDiv).children(".scalingY").val()), parseFloat($(transformationDiv).children(".scalingZ").val()));
+            case "translation":
+              return transformation.translate(parseFloat($(transformationDiv).children(".translationX").val()), parseFloat($(transformationDiv).children(".translationY").val()), parseFloat($(transformationDiv).children(".translationZ").val()));
+            case "xRotation":
+              return transformation.xRotate(parseFloat($(transformationDiv).children(".rotationAngle").val()) / 180 * Math.PI);
+            case "yRotation":
+              return transformation.yRotate(parseFloat($(transformationDiv).children(".rotationAngle").val()) / 180 * Math.PI);
+            case "zRotation":
+              return transformation.zRotate(parseFloat($(transformationDiv).children(".rotationAngle").val()) / 180 * Math.PI);
+            default:
+              return transformation;
+          }
+        })();
+      }
+      return transformation;
     };
     parseBackgroundColor = function() {
       var worldDiv;
@@ -243,18 +351,18 @@
         $("#loadDiv").toggle();
         numberOfFinishedWorkers = 0;
         _results = [];
-        for (i = _i = 0; _i <= 3; i = ++_i) {
-          _results.push(startWorker(i, 4));
+        for (i = _i = 0; _i <= 1; i = ++_i) {
+          _results.push(startWorker(i, 2));
         }
         return _results;
       } else {
         tracer = new Tracer(world);
         for (x = _j = 0; _j <= width; x = _j += 1) {
           for (y = _k = 0; _k <= height; y = _k += 1) {
-            c = tracer.colorFor(cam.rayFor(width, height, x, y));
-            imgData.data[(x * height + height - y - 1) * 4 + 0] = c.r * 255.0;
-            imgData.data[(x * height + height - y - 1) * 4 + 1] = c.g * 255.0;
-            imgData.data[(x * height + height - y - 1) * 4 + 2] = c.b * 255.0;
+            c = tracer.colorFor(cam.rayFor(width, height, y, width - x - 1));
+            imgData.data[(x * height + y) * 4 + 0] = c.r * 255.0;
+            imgData.data[(x * height + y) * 4 + 1] = c.g * 255.0;
+            imgData.data[(x * height + y) * 4 + 2] = c.b * 255.0;
           }
         }
         ctx.putImageData(imgData, 0, 0);
