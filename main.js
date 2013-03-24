@@ -5,12 +5,13 @@
   $ = jQuery;
 
   $(function() {
-    var addRemoveButtonHandler, boxHTML, cam, canvas, createLightDiv, createNodeDiv, createObjectDiv, createTransformationDiv, ctx, directionalLightHTML, extractImageData, getLightHTML, getMaterialHTML, getObjectHTML, getTransformHTML, height, imgData, lambertMaterialHTML, nodeHTML, numberOfFinishedWorkers, parseAmbientLight, parseBackgroundColor, parseCameraDiv, parseData, parseLightDiv, parseLights, parseMaterial, parseObjectDiv, parseObjects, parseTransformations, phongMaterialHTML, planeHTML, pointLightHTML, reflectiveMaterialHTML, render, scalingHTML, singleColorMaterialHTML, sphereHTML, spotLightHTML, startTime, startWorker, translationHTML, transparentMaterialHTML, width, world, xRotationHTML, yRotationHTML, zRotationHTML;
+    var addRemoveButtonHandler, boxHTML, cam, canvas, createLightDiv, createNodeDiv, createObjectDiv, createTransformationDiv, ctx, directionalLightHTML, extractImageData, getLightHTML, getMaterialHTML, getObjectHTML, getTransformHTML, height, imgData, lambertMaterialHTML, nodeHTML, numberOfFinishedWorkers, parseAmbientLight, parseBackgroundColor, parseCameraDiv, parseData, parseLightDiv, parseLights, parseMaterial, parseObjectDiv, parseObjects, parseTransformations, phongMaterialHTML, planeHTML, pointLightHTML, reflectiveMaterialHTML, render, scalingHTML, singleColorMaterialHTML, sphereHTML, spotLightHTML, startTime, startWorker, translationHTML, transparentMaterialHTML, triangleHTML, width, world, xRotationHTML, yRotationHTML, zRotationHTML;
     $("#loadDiv").toggle();
     nodeHTML = $("#nodeHTMLExample").html();
     sphereHTML = $("#sphereHTMLExample").html();
     boxHTML = $("#boxHTMLExample").html();
     planeHTML = $("#planeHTMLExample").html();
+    triangleHTML = $("#triangleHTMLExample").html();
     singleColorMaterialHTML = $("#SingleColorMaterialHTMLExample").html();
     lambertMaterialHTML = $("#LambertMaterialHTMLExample").html();
     phongMaterialHTML = $("#PhongMaterialHTMLExample").html();
@@ -37,6 +38,8 @@
           return createObjectDiv("box", boxHTML, isNodeObject);
         case "Plane":
           return createObjectDiv("plane", planeHTML, isNodeObject);
+        case "Triangle":
+          return createObjectDiv("triangle", triangleHTML, isNodeObject);
         default:
           return className + "not valid";
       }
@@ -190,7 +193,7 @@
       return _results;
     };
     parseObjectDiv = function(objectDiv) {
-      var a, c, lbf, material, n, objectClass, objectContainer, r, run;
+      var a, b, c, lbf, material, n, objectClass, objectContainer, r, run;
       objectClass = $(objectDiv).attr("class");
       material = parseMaterial(objectDiv);
       objectContainer = $(objectDiv).children(".objectContainer")[0];
@@ -202,6 +205,8 @@
             return new AxisAlignedBox(material);
           case "sphere":
             return new Sphere(material);
+          case "triangle":
+            return new Triangle(material);
           case "node":
             return new Node(parseTransformations($(objectDiv).children(".transformationContainer")), parseObjects($(objectDiv).children(".nodeContainer").children("div")));
           default:
@@ -221,6 +226,11 @@
             c = new Point3(parseFloat($(objectContainer).children(".sphereCenterX").val()), parseFloat($(objectContainer).children(".sphereCenterY").val()), parseFloat($(objectContainer).children(".sphereCenterZ").val()));
             r = parseFloat($(objectContainer).children(".sphereRadius").val());
             return new Sphere(material, c, r);
+          case "triangle":
+            a = new Point3(parseFloat($(objectContainer).children(".triangleAX").val()), parseFloat($(objectContainer).children(".triangleAY").val()), parseFloat($(objectContainer).children(".triangleAZ").val()));
+            b = new Point3(parseFloat($(objectContainer).children(".triangleBX").val()), parseFloat($(objectContainer).children(".triangleBY").val()), parseFloat($(objectContainer).children(".triangleBZ").val()));
+            c = new Point3(parseFloat($(objectContainer).children(".triangleCX").val()), parseFloat($(objectContainer).children(".triangleCY").val()), parseFloat($(objectContainer).children(".triangleCZ").val()));
+            return new Triangle(material, a, b, c);
           default:
             return null;
         }

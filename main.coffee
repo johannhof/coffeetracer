@@ -6,6 +6,7 @@ $ ->
   sphereHTML = $("#sphereHTMLExample").html()
   boxHTML = $("#boxHTMLExample").html()
   planeHTML = $("#planeHTMLExample").html()
+  triangleHTML = $("#triangleHTMLExample").html()
   singleColorMaterialHTML = $("#SingleColorMaterialHTMLExample").html()
   lambertMaterialHTML = $("#LambertMaterialHTMLExample").html()
   phongMaterialHTML = $("#PhongMaterialHTMLExample").html()
@@ -24,6 +25,7 @@ $ ->
       when "Sphere" then createObjectDiv "sphere", sphereHTML, isNodeObject
       when "Box" then createObjectDiv "box", boxHTML, isNodeObject
       when "Plane" then createObjectDiv "plane", planeHTML, isNodeObject
+      when "Triangle" then createObjectDiv "triangle", triangleHTML, isNodeObject
       else
         className + "not valid"
 
@@ -157,6 +159,7 @@ $ ->
         when "plane" then return new Plane(material)
         when "box" then return new AxisAlignedBox(material)
         when "sphere" then return new Sphere(material)
+        when "triangle" then return new Triangle(material)
         when "node" then return new Node(parseTransformations($(objectDiv).children(".transformationContainer")),
                                          parseObjects($(objectDiv).children(".nodeContainer").children("div")))
         else
@@ -185,6 +188,17 @@ $ ->
                          parseFloat($(objectContainer).children(".sphereCenterZ").val()))
           r = parseFloat($(objectContainer).children(".sphereRadius").val())
           new Sphere(material, c, r)
+        when "triangle"
+          a = new Point3(parseFloat($(objectContainer).children(".triangleAX").val()),
+                         parseFloat($(objectContainer).children(".triangleAY").val()),
+                         parseFloat($(objectContainer).children(".triangleAZ").val()))
+          b = new Point3(parseFloat($(objectContainer).children(".triangleBX").val()),
+                         parseFloat($(objectContainer).children(".triangleBY").val()),
+                         parseFloat($(objectContainer).children(".triangleBZ").val()))
+          c = new Point3(parseFloat($(objectContainer).children(".triangleCX").val()),
+                         parseFloat($(objectContainer).children(".triangleCY").val()),
+                         parseFloat($(objectContainer).children(".triangleCZ").val()))
+          new Triangle(material,a,b,c)
         else
           null
 

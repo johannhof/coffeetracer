@@ -128,6 +128,9 @@
     if (object.c && object.r) {
       return new Sphere(restoreMaterial(object.material), restorePoint(object.c), parseFloat(object.r));
     }
+    if (object.a && object.b && object.c) {
+      return new Triangle(restoreMaterial(object.material), restorePoint(object.a), restorePoint(object.b), restorePoint(object.c));
+    }
     if (object.geometries) {
       return new Node(restoreTransformation(object.transformation), restoreObjects(object.geometries));
     }
@@ -1096,6 +1099,42 @@
     };
 
     return Sphere;
+
+  })(Geometry);
+
+  this.Triangle = (function(_super) {
+
+    __extends(Triangle, _super);
+
+    function Triangle(material, a, b, c) {
+      var _this = this;
+      this.a = a;
+      this.b = b;
+      this.c = c;
+      this.hit = function(r) {
+        return Triangle.prototype.hit.apply(_this, arguments);
+      };
+      Triangle.__super__.constructor.call(this, material);
+    }
+
+    Triangle.prototype.hit = function(r) {
+      var A, beta, direction, gamma, norm, t, v1, v2, x;
+      A = new Mat3x3(this.a.x - this.b.x, this.a.x - this.c.x, r.d.x, this.a.y - this.b.y, this.a.y - this.c.y, r.d.y, this.a.z - this.b.z, this.a.z - this.c.z, r.d.z);
+      x = new Vector3(this.a.x - r.o.x, this.a.y - r.o.y, this.a.z - r.o.z);
+      beta = A.changeCol1(x).determinant / A.determinant;
+      gamma = A.changeCol2(x).determinant / A.determinant;
+      t = A.changeCol3(x).determinant / A.determinant;
+      v1 = new Vector3(this.b.x - this.a.x, this.b.y - this.a.y, this.b.z - this.a.z);
+      v2 = new Vector3(this.c.x - this.a.x, this.c.y - this.a.y, this.c.z - this.a.z);
+      direction = v2.cross(v1);
+      norm = direction.asNormal();
+      if (t > epsilon && epsilon <= beta && epsilon <= gamma && beta + gamma <= 1) {
+        return new Hit(t, r, this, norm);
+      }
+      return null;
+    };
+
+    return Triangle;
 
   })(Geometry);
 

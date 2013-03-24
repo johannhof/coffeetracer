@@ -21,6 +21,8 @@ restoreObject = (object) ->
     return new AxisAlignedBox(restoreMaterial(object.material), restorePoint(object.lbf), restorePoint(object.run))
   if object.c and object.r
     return new Sphere(restoreMaterial(object.material), restorePoint(object.c), parseFloat(object.r))
+  if object.a and object.b and object.c
+    return new Triangle(restoreMaterial(object.material), restorePoint(object.a), restorePoint(object.b), restorePoint(object.c))
   if object.geometries
     return new Node(restoreTransformation(object.transformation), restoreObjects(object.geometries))
 

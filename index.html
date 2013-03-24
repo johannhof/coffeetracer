@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Coffeescript Raytracer</title>
+    <title>Canvas Raytracer</title>
     <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/font-awesome.min.css">
@@ -19,9 +19,7 @@
         <div id="loadDiv">
             <i class="icon-cog icon-4x icon-spin"></i>
         </div>
-        <canvas id="mainCanvas" width="500" height="500"></canvas>
-        <br>
-
+        <canvas id="mainCanvas" width="500" height="500"></canvas><br>
         <div class="input-prepend">
             <label class="add-on" for="widthInput"><i class="icon-resize-horizontal"></i></label>
             <input class="span1" type="text" id="widthInput" placeholder="Width" value="500" size="4">
@@ -31,7 +29,6 @@
             <input class="span1" type="text" id="heightInput" placeholder="Height" size="4" value="500">
         </div>
         <br>
-
         <div class="input-prepend">
             <label class="add-on" for="webworkers">Webworkers?</label>
             <input type="checkbox" id="webworkers" checked>
@@ -182,13 +179,13 @@
         <br>
         Shadows:<input class="shadowCheck" type="checkbox" checked>
         <br> Position:
-        <input type="text" class="posX" value="1" size="2">
+        <input type="text" class="posX" value="0" size="2">
         <input type="text" class="posY" value="5" size="2">
-        <input type="text" class="posZ" value="1" size="2">
+        <input type="text" class="posZ" value="0" size="2">
         <br> Direction:
-        <input type="text" class="dirX" value="1" size="2">
+        <input type="text" class="dirX" value="0" size="2">
         <input type="text" class="dirY" value="1" size="2">
-        <input type="text" class="dirZ" value="1" size="2">
+        <input type="text" class="dirZ" value="0" size="2">
         <br> HalfAngle: <input type="text" class="halfAngle" value="1" size="2">
     </div>
     <div id="pointLightExample">
@@ -202,9 +199,9 @@
         <br>
         Shadows:<input class="shadowCheck" type="checkbox" checked>
         <br> Position:
-        <input type="text" class="posX" value="1" size="2">
-        <input type="text" class="posY" value="1" size="2">
-        <input type="text" class="posZ" value="1" size="2">
+        <input type="text" class="posX" value="3" size="2">
+        <input type="text" class="posY" value="3" size="2">
+        <input type="text" class="posZ" value="-3" size="2">
     </div>
     <div id="SingleColorMaterialHTMLExample">
         Color:
@@ -262,7 +259,6 @@
                 <option value="Sphere">Sphere</option>
                 <option value="Box">Box</option>
                 <option value="Plane">Plane</option>
-                <option value="Triangle">Triangle</option>
             </select>
             <button class="btn addNodeObject">Add</button>
         </div>
@@ -333,6 +329,21 @@
             x=<input type="text" class="planeNX" value="0" size="1">
             y=<input type="text" class="planeNY" value="1" size="1">
             z=<input type="text" class="planeNZ" value="0" size="1">
+        </div>
+    </div>
+    <div id="triangleHTMLExample">
+        <div class="objectContainer">
+            a: x=<input type="text" class="triangleAX" value="0" size="1">
+            y=<input type="text" class="triangleAY" value="0.5" size="1">
+            z=<input type="text" class="triangleAZ" value="0" size="1">
+            <br>b:
+            x=<input type="text" class="triangleBX" value="0.5" size="1">
+            y=<input type="text" class="triangleBY" value="0.5" size="1">
+            z=<input type="text" class="triangleBZ" value="0" size="1">
+            <br>c:
+            x=<input type="text" class="triangleCX" value="0" size="1">
+            y=<input type="text" class="triangleCY" value="0.5" size="1">
+            z=<input type="text" class="triangleCZ" value="1" size="1">
         </div>
     </div>
 </div>
