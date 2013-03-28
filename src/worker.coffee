@@ -22,7 +22,8 @@ restoreObject = (object) ->
   if object.c and object.r
     return new Sphere(restoreMaterial(object.material), restorePoint(object.c), parseFloat(object.r))
   if object.a and object.b and object.c
-    return new Triangle(restoreMaterial(object.material), restorePoint(object.a), restorePoint(object.b), restorePoint(object.c))
+    return new Triangle(restoreMaterial(object.material), restorePoint(object.a), restorePoint(object.b),
+                        restorePoint(object.c))
   if object.geometries
     return new Node(restoreTransformation(object.transformation), restoreObjects(object.geometries))
 
@@ -92,7 +93,7 @@ render = (startW, endW, width, height, cam, world) ->
   for x in [startW..endW] by 1
     for y in [0..height] by 1
       c = tracer.colorFor((cam.rayFor(width, height, y, width - x - 1)))
-      imgData[(x * height + y) * 4 + 0] = c.r * 255.0
-      imgData[(x * height + y) * 4 + 1] = c.g * 255.0
-      imgData[(x * height + y) * 4 + 2] = c.b * 255.0
+      imgData[(y + x * width) * 4 + 0] = c.r * 255.0
+      imgData[(y + x * width) * 4 + 1] = c.g * 255.0
+      imgData[(y + x * width) * 4 + 2] = c.b * 255.0
   self.postMessage({imgData})

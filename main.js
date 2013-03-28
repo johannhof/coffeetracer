@@ -5,7 +5,7 @@
   $ = jQuery;
 
   $(function() {
-    var addRemoveButtonHandler, boxHTML, cam, canvas, createLightDiv, createNodeDiv, createObjectDiv, createTransformationDiv, ctx, directionalLightHTML, extractImageData, getLightHTML, getMaterialHTML, getObjectHTML, getTransformHTML, height, imgData, lambertMaterialHTML, nodeHTML, numberOfFinishedWorkers, parseAmbientLight, parseBackgroundColor, parseCameraDiv, parseData, parseLightDiv, parseLights, parseMaterial, parseObjectDiv, parseObjects, parseTransformations, phongMaterialHTML, planeHTML, pointLightHTML, reflectiveMaterialHTML, render, scalingHTML, singleColorMaterialHTML, sphereHTML, spotLightHTML, startTime, startWorker, translationHTML, transparentMaterialHTML, triangleHTML, width, world, xRotationHTML, yRotationHTML, zRotationHTML;
+    var addRemoveButtonHandler, boxHTML, cam, canvas, createLightDiv, createNodeDiv, createObjectDiv, createTransformationDiv, ctx, directionalLightHTML, extractImageData, getLightHTML, getMaterialHTML, getObjectHTML, getTransformHTML, height, imgData, lambertMaterialHTML, nodeHTML, numberOfFinishedWorkers, parseAmbientLight, parseBackgroundColor, parseCameraDiv, parseData, parseLightDiv, parseLights, parseMaterial, parseObjectDiv, parseObjects, parseTransformations, phongMaterialHTML, planeHTML, pointLightHTML, reflectiveMaterialHTML, render, scalingHTML, singleColorMaterialHTML, sphereHTML, spotLightHTML, startTime, startWorker, stopWorkers, translationHTML, transparentMaterialHTML, triangleHTML, width, world, xRotationHTML, yRotationHTML, zRotationHTML;
     $("#loadDiv").toggle();
     nodeHTML = $("#nodeHTMLExample").html();
     sphereHTML = $("#sphereHTMLExample").html();
@@ -173,6 +173,7 @@
     imgData = ctx.getImageData(0, 0, width, height);
     numberOfFinishedWorkers = 0;
     startTime = 0;
+    stopWorkers = function() {};
     cam = null;
     world = null;
     parseAmbientLight = function() {
@@ -345,7 +346,7 @@
           return $("#timeDiv").html("Rendered with " + numberOfWorkers + " workers in " + (Date.now() - startTime) / 1000 + " Seconds");
         }
       }, false);
-      return worker.postMessage(JSON.stringify({
+      worker.postMessage(JSON.stringify({
         startW: startW,
         endW: endW,
         width: width,
@@ -353,18 +354,29 @@
         cam: cam,
         world: world
       }));
+      return worker;
     };
+    $("#cancelButton").click(function() {
+      return stopWorkers();
+    });
     render = function(webWorkers) {
-      var c, i, tracer, x, y, _i, _j, _k, _results;
+      var activeWorkers, c, i, tracer, x, y, _i, _j, _k;
       startTime = Date.now();
       if (webWorkers) {
+        activeWorkers = [];
         $("#loadDiv").toggle();
         numberOfFinishedWorkers = 0;
-        _results = [];
         for (i = _i = 0; _i <= 1; i = ++_i) {
-          _results.push(startWorker(i, 2));
+          activeWorkers.push(startWorker(i, 2));
         }
-        return _results;
+        return stopWorkers = function() {
+          var worker, _j, _len;
+          for (_j = 0, _len = activeWorkers.length; _j < _len; _j++) {
+            worker = activeWorkers[_j];
+            worker.terminate();
+          }
+          return $("#loadDiv").toggle();
+        };
       } else {
         tracer = new Tracer(world);
         for (x = _j = 0; _j <= width; x = _j += 1) {

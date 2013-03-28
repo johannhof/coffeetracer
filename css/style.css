@@ -37,13 +37,13 @@ body {
   width: 100%;
   height: 100%;
   color: white;
-  font-size: 36px;
+  font-size: 26px;
   box-shadow: 1px 1px 1px black;
   background-color: rgba(0, 0, 0, 0.5);
 }
-#loadDiv i {
+#loadDiv .centerMe {
   position: absolute;
-  left: 40%;
+  left: 25%;
   top: 30%;
 }
 #wrapper {

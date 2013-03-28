@@ -217,9 +217,9 @@
     for (x = _i = startW; _i <= endW; x = _i += 1) {
       for (y = _j = 0; _j <= height; y = _j += 1) {
         c = tracer.colorFor(cam.rayFor(width, height, y, width - x - 1));
-        imgData[(x * height + y) * 4 + 0] = c.r * 255.0;
-        imgData[(x * height + y) * 4 + 1] = c.g * 255.0;
-        imgData[(x * height + y) * 4 + 2] = c.b * 255.0;
+        imgData[(y + x * width) * 4 + 0] = c.r * 255.0;
+        imgData[(y + x * width) * 4 + 1] = c.g * 255.0;
+        imgData[(y + x * width) * 4 + 2] = c.b * 255.0;
       }
     }
     return self.postMessage({

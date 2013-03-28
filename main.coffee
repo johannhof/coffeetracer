@@ -137,6 +137,7 @@ $ ->
   #######Render Setup########
   numberOfFinishedWorkers = 0
   startTime = 0
+  stopWorkers = ->
 
   #######Parsing#######
   cam = null;
@@ -326,14 +327,22 @@ $ ->
         $("#timeDiv").html("Rendered with " + numberOfWorkers + " workers in " + (Date.now() - startTime) / 1000 + " Seconds")
     , false)
     worker.postMessage(JSON.stringify({startW, endW, width, height, cam, world}))
+    worker
+
+  $("#cancelButton").click ->
+    stopWorkers()
 
   render = (webWorkers) ->
     startTime = Date.now()
     if webWorkers
+      activeWorkers = []
       $("#loadDiv").toggle()
       numberOfFinishedWorkers = 0
       for i in [0..1]
-        startWorker(i, 2)
+        activeWorkers.push(startWorker(i, 2))
+      stopWorkers = () ->
+        worker.terminate() for worker in activeWorkers
+        $("#loadDiv").toggle()
     else
       tracer = new Tracer(world)
       for x in [0..width] by 1
