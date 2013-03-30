@@ -34,7 +34,7 @@ class @Hit
   constructor: (@t, @ray, @geo, @normal) ->
 
 class @Tracer
-  @maxDepth: 6
+  @maxDepth: 4
   constructor: (@world) ->
     @recursionCounter = Tracer.maxDepth
   colorFor: (ray) ->

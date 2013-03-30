@@ -134,6 +134,16 @@ $ ->
   ctx.fillRect(0, 0, width, height)
   imgData = ctx.getImageData(0, 0, width, height)
 
+  $("#resizeCanvasButton").click ->
+    canvas.width = parseFloat($("#widthInput").val())
+    canvas.height = parseFloat($("#heightInput").val())
+    ctx = canvas.getContext "2d"
+    ctx.fillStyle = "white"
+    width = canvas.width
+    height = canvas.height
+    ctx.fillRect(0, 0, width, height)
+    imgData = ctx.getImageData(0, 0, width, height)
+
   #######Render Setup########
   numberOfFinishedWorkers = 0
   startTime = 0
@@ -338,8 +348,8 @@ $ ->
       activeWorkers = []
       $("#loadDiv").toggle()
       numberOfFinishedWorkers = 0
-      for i in [0..1]
-        activeWorkers.push(startWorker(i, 2))
+      for i in [0..4]
+        activeWorkers.push(startWorker(i, 5))
       stopWorkers = () ->
         worker.terminate() for worker in activeWorkers
         $("#loadDiv").toggle()
@@ -347,19 +357,19 @@ $ ->
       tracer = new Tracer(world)
       for x in [0..width] by 1
         for y in [0..height] by 1
-          c = tracer.colorFor((cam.rayFor(width, height, y, width - x - 1)))
-          imgData.data[(x * height + y) * 4 + 0] = c.r * 255.0
-          imgData.data[(x * height + y) * 4 + 1] = c.g * 255.0
-          imgData.data[(x * height + y) * 4 + 2] = c.b * 255.0
+          c = tracer.colorFor((cam.rayFor(width, height,x, y)))
+          imgData.data[(x + (height - y - 1) * width) * 4 + 0] = c.r * 255.0
+          imgData.data[(x + (height - y - 1) * width) * 4 + 1] = c.g * 255.0
+          imgData.data[(x + (height - y - 1) * width) * 4 + 2] = c.b * 255.0
       ctx.putImageData(imgData, 0, 0)
       $("#timeDiv").html("Rendered in " + (Date.now() - startTime) / 1000 + " Seconds")
 
   extractImageData = (newImgData, sx, sy, ex, ey) ->
     for x in [sx..ex] by 1
       for y in [sy..ey] by 1
-        imgData.data[(x * height + y) * 4 + 0] = newImgData[(x * height + y) * 4 + 0]
-        imgData.data[(x * height + y) * 4 + 1] = newImgData[(x * height + y) * 4 + 1]
-        imgData.data[(x * height + y) * 4 + 2] = newImgData[(x * height + y) * 4 + 2]
+        imgData.data[(x + (height - y - 1) * width) * 4 + 0] = newImgData[(x + (height - y - 1) * width) * 4 + 0]
+        imgData.data[(x + (height - y - 1) * width) * 4 + 1] = newImgData[(x + (height - y - 1) * width) * 4 + 1]
+        imgData.data[(x + (height - y - 1) * width) * 4 + 2] = newImgData[(x + (height - y - 1) * width) * 4 + 2]
 
   $("#goButton").click ->
     parseData()

@@ -171,6 +171,16 @@
     height = canvas.height;
     ctx.fillRect(0, 0, width, height);
     imgData = ctx.getImageData(0, 0, width, height);
+    $("#resizeCanvasButton").click(function() {
+      canvas.width = parseFloat($("#widthInput").val());
+      canvas.height = parseFloat($("#heightInput").val());
+      ctx = canvas.getContext("2d");
+      ctx.fillStyle = "white";
+      width = canvas.width;
+      height = canvas.height;
+      ctx.fillRect(0, 0, width, height);
+      return imgData = ctx.getImageData(0, 0, width, height);
+    });
     numberOfFinishedWorkers = 0;
     startTime = 0;
     stopWorkers = function() {};
@@ -366,8 +376,8 @@
         activeWorkers = [];
         $("#loadDiv").toggle();
         numberOfFinishedWorkers = 0;
-        for (i = _i = 0; _i <= 1; i = ++_i) {
-          activeWorkers.push(startWorker(i, 2));
+        for (i = _i = 0; _i <= 4; i = ++_i) {
+          activeWorkers.push(startWorker(i, 5));
         }
         return stopWorkers = function() {
           var worker, _j, _len;
@@ -381,10 +391,10 @@
         tracer = new Tracer(world);
         for (x = _j = 0; _j <= width; x = _j += 1) {
           for (y = _k = 0; _k <= height; y = _k += 1) {
-            c = tracer.colorFor(cam.rayFor(width, height, y, width - x - 1));
-            imgData.data[(x * height + y) * 4 + 0] = c.r * 255.0;
-            imgData.data[(x * height + y) * 4 + 1] = c.g * 255.0;
-            imgData.data[(x * height + y) * 4 + 2] = c.b * 255.0;
+            c = tracer.colorFor(cam.rayFor(width, height, x, y));
+            imgData.data[(x + (height - y - 1) * width) * 4 + 0] = c.r * 255.0;
+            imgData.data[(x + (height - y - 1) * width) * 4 + 1] = c.g * 255.0;
+            imgData.data[(x + (height - y - 1) * width) * 4 + 2] = c.b * 255.0;
           }
         }
         ctx.putImageData(imgData, 0, 0);
@@ -399,9 +409,9 @@
           var _j, _results1;
           _results1 = [];
           for (y = _j = sy; _j <= ey; y = _j += 1) {
-            imgData.data[(x * height + y) * 4 + 0] = newImgData[(x * height + y) * 4 + 0];
-            imgData.data[(x * height + y) * 4 + 1] = newImgData[(x * height + y) * 4 + 1];
-            _results1.push(imgData.data[(x * height + y) * 4 + 2] = newImgData[(x * height + y) * 4 + 2]);
+            imgData.data[(x + (height - y - 1) * width) * 4 + 0] = newImgData[(x + (height - y - 1) * width) * 4 + 0];
+            imgData.data[(x + (height - y - 1) * width) * 4 + 1] = newImgData[(x + (height - y - 1) * width) * 4 + 1];
+            _results1.push(imgData.data[(x + (height - y - 1) * width) * 4 + 2] = newImgData[(x + (height - y - 1) * width) * 4 + 2]);
           }
           return _results1;
         })());

@@ -45,9 +45,9 @@ class @ReflectiveMaterial
     returnColor.add(reflec)
 
 class @TransparentMaterial
-  @maxDepth = 4
+  @maxDepth: 3
   constructor: (@indexOfRefraction) ->
-    @recursionCounter = @maxDepth
+    @recursionCounter = TransparentMaterial.maxDepth
   colorFor: (hit, world, tracer) =>
     if @recursionCounter-- <= 0 then return world.backgroundColor
     normal = hit.normal
@@ -72,9 +72,9 @@ class @TransparentMaterial
       color = (tracer.colorFor(new Ray(hit.ray.at(hit.t),
                                        hit.ray.d.add(normal.mul(cosI * 2)))).mulNumber(R)).add(tracer.colorFor(new Ray(hit.ray.at(hit.t),
                                                                                                                  t)).mulNumber(1 - R))
-      @recursionCounter = @maxDepth
+      @recursionCounter = TransparentMaterial.maxDepth
       return color
     else
       color = tracer.colorFor(new Ray(hit.ray.at(hit.t), hit.ray.d.add(normal.mul(cosI * 2))))
-      @recursionCounter = @maxDepth
+      @recursionCounter = TransparentMaterial.maxDepth
       return color

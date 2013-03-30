@@ -92,8 +92,8 @@ render = (startW, endW, width, height, cam, world) ->
   tracer = new Tracer(world)
   for x in [startW..endW] by 1
     for y in [0..height] by 1
-      c = tracer.colorFor((cam.rayFor(width, height, y, width - x - 1)))
-      imgData[(y + x * width) * 4 + 0] = c.r * 255.0
-      imgData[(y + x * width) * 4 + 1] = c.g * 255.0
-      imgData[(y + x * width) * 4 + 2] = c.b * 255.0
+      c = tracer.colorFor((cam.rayFor(width, height, x, y)))
+      imgData[(x + (height - y - 1) * width) * 4 + 0] = c.r * 255.0
+      imgData[(x + (height - y - 1) * width) * 4 + 1] = c.g * 255.0
+      imgData[(x + (height - y - 1) * width) * 4 + 2] = c.b * 255.0
   self.postMessage({imgData})
