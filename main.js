@@ -5,7 +5,7 @@
   $ = jQuery;
 
   $(function() {
-    var addRemoveButtonHandler, boxHTML, cam, canvas, createLightDiv, createNodeDiv, createObjectDiv, createTransformationDiv, ctx, directionalLightHTML, extractImageData, getLightHTML, getMaterialHTML, getObjectHTML, getTransformHTML, height, imgData, lambertMaterialHTML, nodeHTML, numberOfFinishedWorkers, parseAmbientLight, parseBackgroundColor, parseCameraDiv, parseData, parseLightDiv, parseLights, parseMaterial, parseObjectDiv, parseObjects, parseTransformations, phongMaterialHTML, planeHTML, pointLightHTML, reflectiveMaterialHTML, render, scalingHTML, singleColorMaterialHTML, sphereHTML, spotLightHTML, startTime, startWorker, stopWorkers, translationHTML, transparentMaterialHTML, triangleHTML, width, world, xRotationHTML, yRotationHTML, zRotationHTML;
+    var addRemoveButtonHandler, boxHTML, cam, canvas, createLightDiv, createNodeDiv, createObjectDiv, createTransformationDiv, ctx, directionalLightHTML, extractImageData, getLightHTML, getMaterialHTML, getObjectHTML, getTransformHTML, height, imgData, lambertMaterialHTML, nodeHTML, parseAmbientLight, parseBackgroundColor, parseCameraDiv, parseData, parseLightDiv, parseLights, parseMaterial, parseObjectDiv, parseObjects, parseTransformations, phongMaterialHTML, planeHTML, pointLightHTML, reflectiveMaterialHTML, render, scalingHTML, singleColorMaterialHTML, sphereHTML, spotLightHTML, startTime, translationHTML, transparentMaterialHTML, triangleHTML, width, workerManager, world, xRotationHTML, yRotationHTML, zRotationHTML;
     $("#loadDiv").toggle();
     nodeHTML = $("#nodeHTMLExample").html();
     sphereHTML = $("#sphereHTMLExample").html();
@@ -53,7 +53,8 @@
       var div;
       div = document.createElement("div");
       div.setAttribute("class", objectName);
-      $(div).css("background-color", "lightgrey").append($("#objectHTMLExample").html());
+      $(div).css("border", "1px solid lightgrey").css("margin-bottom", "5px").css("padding", "10px").append($("#objectHTMLExample").html());
+      $(div).children("b").html(objectName + ":");
       if (!isNodeObject) {
         $(div).append(propertyHtml);
       }
@@ -67,7 +68,7 @@
       var div;
       div = document.createElement("div");
       div.setAttribute("class", lightName);
-      $(div).css("background-color", "lightgrey").append(lightHTML);
+      $(div).css("border", "1px solid lightgrey").css("margin-bottom", "5px").css("padding", "10px").append(lightHTML);
       addRemoveButtonHandler(div);
       return div;
     };
@@ -75,7 +76,7 @@
       var div;
       div = document.createElement("div");
       div.setAttribute("class", "node");
-      $(div).css("background-color", "lightgrey").append(nodeHTML);
+      $(div).css("border", "1px solid lightgrey").css("margin-bottom", "5px").css("padding", "10px").append(nodeHTML);
       addRemoveButtonHandler(div);
       $(div).children(".input-append").children(".addNodeObject").click(function() {
         return $(div).children(".nodeContainer").append(getObjectHTML($(div).children(".input-append").children(".nodeSelectObject").val(), true));
@@ -89,7 +90,7 @@
       var div;
       div = document.createElement("div");
       div.setAttribute("class", name);
-      $(div).css("background-color", "lightgrey").append(transformationHTML);
+      $(div).append(transformationHTML);
       addRemoveButtonHandler(div);
       return div;
     };
@@ -181,9 +182,7 @@
       ctx.fillRect(0, 0, width, height);
       return imgData = ctx.getImageData(0, 0, width, height);
     });
-    numberOfFinishedWorkers = 0;
     startTime = 0;
-    stopWorkers = function() {};
     cam = null;
     world = null;
     parseAmbientLight = function() {
@@ -343,54 +342,61 @@
       cam = parseCameraDiv();
       return world = new World(parseBackgroundColor(), parseObjects(), parseLights(), parseAmbientLight(), parseFloat($("#worldDiv").children(".indexOfRefraction").val()));
     };
-    startWorker = function(number, numberOfWorkers) {
-      var endW, startW, worker;
-      startW = width / numberOfWorkers * number;
-      endW = startW + width / numberOfWorkers;
-      worker = new Worker('engine.js');
-      worker.addEventListener('message', function(e) {
-        extractImageData(e.data.imgData, startW, 0, endW, height);
-        if (numberOfWorkers === ++numberOfFinishedWorkers) {
-          ctx.putImageData(imgData, 0, 0);
-          $("#loadDiv").toggle();
-          return $("#timeDiv").html("Rendered with " + numberOfWorkers + " workers in " + (Date.now() - startTime) / 1000 + " Seconds");
+    workerManager = {
+      workers: [],
+      numberOfFinishedWorkers: 0,
+      startWorker: function(number, numberOfWorkers) {
+        var endW, startW;
+        startW = width / numberOfWorkers * number;
+        endW = startW + width / numberOfWorkers;
+        this.workers[number] = new Worker('engine.js');
+        this.workers[number].addEventListener('message', function(e) {
+          extractImageData(e.data.imgData, startW, 0, endW, height);
+          if (numberOfWorkers === ++workerManager.numberOfFinishedWorkers) {
+            ctx.putImageData(imgData, 0, 0);
+            $("#loadDiv").toggle();
+            return $("#timeDiv").html("Rendered with " + workerManager.numberOfFinishedWorkers + " workers in " + (Date.now() - startTime) / 1000 + " Seconds");
+          }
+        }, false);
+        return this.workers[number].postMessage(JSON.stringify({
+          startW: startW,
+          endW: endW,
+          width: width,
+          height: height,
+          cam: cam,
+          world: world
+        }));
+      },
+      startWorkers: function(numberOfWorkers) {
+        var number, _i, _ref;
+        workerManager.numberOfFinishedWorkers = 0;
+        for (number = _i = 0, _ref = numberOfWorkers - 1; 0 <= _ref ? _i <= _ref : _i >= _ref; number = 0 <= _ref ? ++_i : --_i) {
+          this.startWorker(number, numberOfWorkers);
         }
-      }, false);
-      worker.postMessage(JSON.stringify({
-        startW: startW,
-        endW: endW,
-        width: width,
-        height: height,
-        cam: cam,
-        world: world
-      }));
-      return worker;
+        return true;
+      },
+      stopWorkers: function() {
+        var i, _i, _ref;
+        for (i = _i = 0, _ref = this.workers.length - 1; 0 <= _ref ? _i <= _ref : _i >= _ref; i = 0 <= _ref ? ++_i : --_i) {
+          this.workers[i].terminate();
+        }
+        return $("#loadDiv").toggle();
+      }
     };
     $("#cancelButton").click(function() {
-      return stopWorkers();
+      return workerManager.stopWorkers();
     });
     render = function(webWorkers) {
-      var activeWorkers, c, i, tracer, x, y, _i, _j, _k;
+      var c, numberOfWorkers, tracer, x, y, _i, _j;
       startTime = Date.now();
       if (webWorkers) {
-        activeWorkers = [];
         $("#loadDiv").toggle();
-        numberOfFinishedWorkers = 0;
-        for (i = _i = 0; _i <= 4; i = ++_i) {
-          activeWorkers.push(startWorker(i, 5));
-        }
-        return stopWorkers = function() {
-          var worker, _j, _len;
-          for (_j = 0, _len = activeWorkers.length; _j < _len; _j++) {
-            worker = activeWorkers[_j];
-            worker.terminate();
-          }
-          return $("#loadDiv").toggle();
-        };
+        numberOfWorkers = parseInt($("#numberOfWorkers").val(), 10);
+        return workerManager.startWorkers(numberOfWorkers);
       } else {
         tracer = new Tracer(world);
-        for (x = _j = 0; _j <= width; x = _j += 1) {
-          for (y = _k = 0; _k <= height; y = _k += 1) {
+        for (x = _i = 0; _i <= width; x = _i += 1) {
+          for (y = _j = 0; _j <= height; y = _j += 1) {
             c = tracer.colorFor(cam.rayFor(width, height, x, y));
             imgData.data[(x + (height - y - 1) * width) * 4 + 0] = c.r * 255.0;
             imgData.data[(x + (height - y - 1) * width) * 4 + 1] = c.g * 255.0;

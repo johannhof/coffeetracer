@@ -85,12 +85,15 @@ header {
   background: url("../img/low_contrast_linen.png") repeat;
   box-shadow: 1px 1px 1px black;
   min-height: 100px;
-  padding: 20px;
+  padding: 15px;
 }
 input {
   width: 40px;
   background: none;
   text-align: center;
+}
+select {
+  width: auto;
 }
 .redInput {
   background: #f08080 !important;
@@ -125,7 +128,7 @@ h2 {
   background-color: #d3d3d3;
   padding-bottom: 5px;
   float: left;
-  box-shadow: 1px 1px 3px black;
+  border: 1px solid lightgrey;
   text-align: center;
 }
 #renderDiv {
@@ -137,7 +140,7 @@ h2 {
   min-width: 250px;
   margin-bottom: 20px;
   float: left;
-  box-shadow: 1px 1px 3px black;
+  border: 1px solid lightgrey;
   background-color: white;
   margin-right: 20px;
 }

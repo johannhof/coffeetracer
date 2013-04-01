@@ -27,16 +27,14 @@
                 <button id="cancelButton" class="btn btn-large btn-danger">Cancel</button>
             </div>
         </div>
-        <canvas id="mainCanvas" width="800" height="600"></canvas>
-        <br>
-
+        <canvas id="mainCanvas" width="500" height="500"></canvas><br>
         <div class="input-prepend">
             <label class="add-on" for="widthInput"><i class="icon-resize-horizontal"></i></label>
-            <input class="span1" type="text" id="widthInput" placeholder="Width" value="800" size="4">
+            <input class="span1" type="text" id="widthInput" placeholder="Width" value="500" size="4">
         </div>
         <div class="input-prepend">
             <label class="add-on" for="heightInput"><i class="icon-resize-vertical"></i></label>
-            <input class="span1" type="text" id="heightInput" placeholder="Height" size="4" value="600">
+            <input class="span1" type="text" id="heightInput" placeholder="Height" size="4" value="500">
         </div>
         <button id="resizeCanvasButton" class="btn">Resize</button>
         <br>
@@ -45,6 +43,7 @@
             <label class="add-on" for="webworkers">HTML5 Webworkers?</label>
             <input type="checkbox" id="webworkers" checked>
         </div>
+        <input id="numberOfWorkers" type="number" step="1" min="1" max="10" value="5">
         <br>
         <button class="btn btn-large btn-success" id="goButton"><i class="icon-cogs"></i> Render Image</button>
         <div id="timeDiv"></div>
@@ -265,6 +264,7 @@
 <div id="nodeHTMLExample">
     <b>Node:</b>
     <button class="btn-danger btn-mini removeButton">Remove</button>
+    <br>
     Objects:
     <div class="input-append">
         <select class="nodeSelectObject">

@@ -2,6 +2,7 @@ $ = jQuery
 $ ->
   $("#loadDiv").toggle()
   #######Objects#######
+  #Get the templates for for all divs that can be added/removed
   nodeHTML = $("#nodeHTMLExample").html()
   sphereHTML = $("#sphereHTMLExample").html()
   boxHTML = $("#boxHTMLExample").html()
@@ -17,8 +18,10 @@ $ ->
   xRotationHTML = $("#X-RotationHTMLExample").html()
   yRotationHTML = $("#Y-RotationHTMLExample").html()
   zRotationHTML = $("#Z-RotationHTMLExample").html()
+
   $("#addObjectButton").click ->
     $("#objects").append(getObjectHTML($("#selectObject").val()))
+
   getObjectHTML = (className, isNodeObject = false) ->
     switch className
       when "Node" then createNodeDiv
@@ -36,7 +39,9 @@ $ ->
   createObjectDiv = (objectName, propertyHtml, isNodeObject) ->
     div = document.createElement "div"
     div.setAttribute("class", objectName)
-    $(div).css("background-color", "lightgrey").append($("#objectHTMLExample").html())
+    $(div).css("border", "1px solid lightgrey").css("margin-bottom", "5px").css("padding",
+                                                                                "10px").append($("#objectHTMLExample").html())
+    $(div).children("b").html(objectName + ":")
     if not isNodeObject then $(div).append(propertyHtml)
     addRemoveButtonHandler(div)
     $(div).children(".selectMaterial").change ->
@@ -46,14 +51,14 @@ $ ->
   createLightDiv = (lightName, lightHTML) ->
     div = document.createElement "div"
     div.setAttribute("class", lightName)
-    $(div).css("background-color", "lightgrey").append(lightHTML)
+    $(div).css("border", "1px solid lightgrey").css("margin-bottom", "5px").css("padding", "10px").append(lightHTML)
     addRemoveButtonHandler(div)
     div
 
   createNodeDiv = ->
     div = document.createElement "div"
     div.setAttribute("class", "node")
-    $(div).css("background-color", "lightgrey").append(nodeHTML)
+    $(div).css("border", "1px solid lightgrey").css("margin-bottom", "5px").css("padding", "10px").append(nodeHTML)
     addRemoveButtonHandler(div)
     $(div).children(".input-append").children(".addNodeObject").click ->
       $(div).children(".nodeContainer").append(getObjectHTML($(div).children(".input-append").children(".nodeSelectObject").val(),
@@ -65,10 +70,9 @@ $ ->
   createTransformationDiv = (name, transformationHTML) ->
     div = document.createElement "div"
     div.setAttribute("class", name)
-    $(div).css("background-color", "lightgrey").append(transformationHTML)
+    $(div).append(transformationHTML)
     addRemoveButtonHandler(div)
     div
-
 
   getTransformHTML = (transformationName) ->
     switch transformationName
@@ -145,9 +149,7 @@ $ ->
     imgData = ctx.getImageData(0, 0, width, height)
 
   #######Render Setup########
-  numberOfFinishedWorkers = 0
   startTime = 0
-  stopWorkers = ->
 
   #######Parsing#######
   cam = null;
@@ -209,7 +211,7 @@ $ ->
           c = new Point3(parseFloat($(objectContainer).children(".triangleCX").val()),
                          parseFloat($(objectContainer).children(".triangleCY").val()),
                          parseFloat($(objectContainer).children(".triangleCZ").val()))
-          new Triangle(material,a,b,c)
+          new Triangle(material, a, b, c)
         else
           null
 
@@ -283,11 +285,11 @@ $ ->
                                      parseFloat($(transformationDiv).children(".translationY").val()),
                                      parseFloat($(transformationDiv).children(".translationZ").val()))
           when "xRotation"
-            transformation.xRotate(parseFloat($(transformationDiv).children(".rotationAngle").val())/ 180 * Math.PI)
+            transformation.xRotate(parseFloat($(transformationDiv).children(".rotationAngle").val()) / 180 * Math.PI)
           when "yRotation"
-            transformation.yRotate(parseFloat($(transformationDiv).children(".rotationAngle").val())/ 180 * Math.PI )
+            transformation.yRotate(parseFloat($(transformationDiv).children(".rotationAngle").val()) / 180 * Math.PI)
           when "zRotation"
-            transformation.zRotate(parseFloat($(transformationDiv).children(".rotationAngle").val())/ 180 * Math.PI)
+            transformation.zRotate(parseFloat($(transformationDiv).children(".rotationAngle").val()) / 180 * Math.PI)
           else
             transformation
       )()
@@ -325,39 +327,52 @@ $ ->
     world = new World(parseBackgroundColor(), parseObjects(), parseLights(), parseAmbientLight(),
                       parseFloat($("#worldDiv").children(".indexOfRefraction").val()))
 
-  startWorker = (number, numberOfWorkers)->
+  workerManager = {
+  workers:
+    []
+
+  numberOfFinishedWorkers: 0
+
+  startWorker: (number, numberOfWorkers) ->
     startW = width / numberOfWorkers * number
     endW = startW + width / numberOfWorkers
-    worker = new Worker('engine.js')
-    worker.addEventListener('message', (e) ->
+    this.workers[number] = new Worker('engine.js')
+    this.workers[number].addEventListener('message', (e) ->
       extractImageData(e.data.imgData, startW, 0, endW, height)
-      if numberOfWorkers is ++numberOfFinishedWorkers
+      if numberOfWorkers is ++workerManager.numberOfFinishedWorkers
         ctx.putImageData(imgData, 0, 0)
         $("#loadDiv").toggle()
-        $("#timeDiv").html("Rendered with " + numberOfWorkers + " workers in " + (Date.now() - startTime) / 1000 + " Seconds")
+        $("#timeDiv").html("Rendered with " + workerManager.numberOfFinishedWorkers + " workers in " + (Date.now() - startTime) / 1000 + " Seconds")
     , false)
-    worker.postMessage(JSON.stringify({startW, endW, width, height, cam, world}))
-    worker
+    this.workers[number].postMessage(JSON.stringify({startW, endW, width, height, cam, world}))
+
+  startWorkers: (numberOfWorkers) ->
+    workerManager.numberOfFinishedWorkers = 0
+    for number in [0..numberOfWorkers - 1]
+      this.startWorker(number, numberOfWorkers)
+    # return true to avoid coffeescript making an array of results to return
+    true
+
+  stopWorkers: ->
+    for i in [0..this.workers.length - 1]
+      this.workers[i].terminate()
+    $("#loadDiv").toggle()
+  }
 
   $("#cancelButton").click ->
-    stopWorkers()
+    workerManager.stopWorkers()
 
   render = (webWorkers) ->
     startTime = Date.now()
     if webWorkers
-      activeWorkers = []
       $("#loadDiv").toggle()
-      numberOfFinishedWorkers = 0
-      for i in [0..4]
-        activeWorkers.push(startWorker(i, 5))
-      stopWorkers = () ->
-        worker.terminate() for worker in activeWorkers
-        $("#loadDiv").toggle()
+      numberOfWorkers = parseInt($("#numberOfWorkers").val(), 10)
+      workerManager.startWorkers(numberOfWorkers)
     else
       tracer = new Tracer(world)
       for x in [0..width] by 1
         for y in [0..height] by 1
-          c = tracer.colorFor((cam.rayFor(width, height,x, y)))
+          c = tracer.colorFor((cam.rayFor(width, height, x, y)))
           imgData.data[(x + (height - y - 1) * width) * 4 + 0] = c.r * 255.0
           imgData.data[(x + (height - y - 1) * width) * 4 + 1] = c.g * 255.0
           imgData.data[(x + (height - y - 1) * width) * 4 + 2] = c.b * 255.0

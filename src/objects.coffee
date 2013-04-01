@@ -74,16 +74,16 @@ class @Sphere extends Geometry
     super material
   hit: (ray) =>
     a = ray.d.dot(ray.d)
-    b = ray.d.dot((ray.o.subPoint(@c)).mul(2));
-    cn = (ray.o.subPoint(@c).dot(ray.o.subPoint(@c)) - (@r * @r));
-    d = (b * b) - 4.0 * a * cn;
-    t = (-b - Math.sqrt(d)) / (2.0 * a);
+    oMinusC = (ray.o.subPoint(@c))
+    b = ray.d.dot(oMinusC.mul(2))
+    d = (b * b) - 4.0 * a * (oMinusC.dot(oMinusC) - (@r * @r))
+    t = (-b - Math.sqrt(d)) / (2.0 * a)
     if d > epsilon
       if t > epsilon
-        return new Hit(t, ray, this, (ray.o.subPoint(@c).add(ray.d.mul(t)).mul(1.0 / @r).asNormal()))
+        return new Hit(t, ray, this, (oMinusC.add(ray.d.mul(t)).mul(1.0 / @r).asNormal()))
       t = (-b + Math.sqrt(d)) / (2.0 * a)
       if t > epsilon
-        return new Hit(t, ray, this, (ray.o.subPoint(@c).add(ray.d.mul(t)).mul(1.0 / @r).asNormal()))
+        return new Hit(t, ray, this, (oMinusC.add(ray.d.mul(t)).mul(1.0 / @r).asNormal()))
     null
 
 class @Triangle extends Geometry
@@ -97,10 +97,6 @@ class @Triangle extends Geometry
     t = A.changeCol3(x).determinant / A.determinant
     v1 = new Vector3(@b.x - @a.x, @b.y - @a.y, @b.z - @a.z)
     v2 = new Vector3(@c.x - @a.x, @c.y - @a.y, @c.z - @a.z)
-    direction = (v2.cross(v1))
-    norm = direction.asNormal()
     if (t > epsilon && epsilon <= beta && epsilon <= gamma && beta + gamma <= 1)
-      return new Hit(t, r, this, norm)
+      return new Hit(t, r, this, (v2.cross(v1)).asNormal())
     null
-
-
