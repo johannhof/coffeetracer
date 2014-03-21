@@ -4,15 +4,19 @@ body, html {
   font-family: 'Raleway', sans-serif;
 }
 
+button, select, input{
+  font-family: 'Raleway', sans-serif;
+}
+
 body {
-  background: rgb(228, 77, 38); /* Old browsers */
-  background: -moz-linear-gradient(left, rgba(228, 77, 38, 1) 0%, rgba(209, 116, 35, 1) 69%); /* FF3.6+ */
-  background: -webkit-gradient(linear, left top, right top, color-stop(0%, rgba(228, 77, 38, 1)), color-stop(69%, rgba(209, 116, 35, 1))); /* Chrome,Safari4+ */
-  background: -webkit-linear-gradient(left, rgba(228, 77, 38, 1) 0%, rgba(209, 116, 35, 1) 69%); /* Chrome10+,Safari5.1+ */
-  background: -o-linear-gradient(left, rgba(228, 77, 38, 1) 0%, rgba(209, 116, 35, 1) 69%); /* Opera 11.10+ */
-  background: -ms-linear-gradient(left, rgba(228, 77, 38, 1) 0%, rgba(209, 116, 35, 1) 69%); /* IE10+ */
-  background: linear-gradient(to right, rgba(228, 77, 38, 1) 0%, rgba(209, 116, 35, 1) 69%); /* W3C */
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#e44d26', endColorstr='#d17423', GradientType=1); /* IE6-9 */
+  background: #e44d26;
+  background: -moz-linear-gradient(left, #e44d26 0%, #d17423 69%);
+  background: -webkit-gradient(linear, left top, right top, color-stop(0%, #e44d26), color-stop(69%, #d17423));
+  background: -webkit-linear-gradient(left, #e44d26 0%, #d17423 69%);
+  background: -o-linear-gradient(left, #e44d26 0%, #d17423 69%);
+  background: -ms-linear-gradient(left, #e44d26 0%, #d17423 69%);
+  background: linear-gradient(to right, #e44d26 0%, #d17423 69%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#e44d26', endColorstr='#d17423', GradientType=1);
 }
 
 #loadDiv {
@@ -42,21 +46,17 @@ body {
   background: -ms-linear-gradient(top, rgba(219, 219, 219, 1) 0%, rgba(229, 229, 229, 1) 100%); /* IE10+ */
   background: linear-gradient(to bottom, rgba(219, 219, 219, 1) 0%, rgba(229, 229, 229, 1) 100%); /* W3C */
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#dbdbdb', endColorstr='#e5e5e5', GradientType=0); /* IE6-9 */
-  padding-bottom: 100px; /* height of footer */
+  padding-bottom: 40px;
   min-height: 88%;
   position: relative;
 }
 
-header img {
-  float: right;
-  margin-top: 20px;
+#html5-logo {
+  float: left;
 }
 
 header {
-  background: url("../img/low_contrast_linen.png") repeat;
-  box-shadow: 1px 1px 1px black;
-  min-height: 100px;
-  padding: 15px;
+  padding: 35px;
 }
 
 input {
@@ -82,17 +82,15 @@ select {
 }
 
 h1 {
-  margin-top: 28px;
-  text-shadow: 2px 1px 1px black;
-  text-shadow: hsl(36,70%,45%) -1px -1px, hsl(36,70%,45%) -2px -2px, hsl(36,70%,45%) -3px -3px;
+  margin: 0;
   color: white;
-  font-size: 88px;
-  font-weight: 400;
+  font-size: 68px;
+  font-weight: 100;
+  display: inline-block;
 }
 
 h2 {
   font-size: 28px;
-  text-shadow: 1px 1px 3px grey;
   margin: 0 0 8px;
   font-weight: 200;
 }
@@ -122,21 +120,12 @@ h2 {
 .propertyDiv {
   font-size: 14px;
   padding: 10px;
-  min-width: 250px;
+  min-width: 280px;
   margin-bottom: 20px;
   float: left;
   border: 1px solid lightgrey;
   background-color: white;
   margin-right: 20px;
-}
-
-#worldDiv {
-}
-
-#lightsDiv {
-}
-
-#objectsDiv {
 }
 
 #cameraDiv {
@@ -161,11 +150,11 @@ h2 {
 
 footer {
   text-align: center;
-  box-shadow: 0px 2px 4px black inset;
-  padding: 25px 5%;
+  padding: 15px 5%;
   color: white;
-  font-size: 22px;
-  font-family: Arial, sans-serif;
+  font-size: 20px;
+  font-family: Raleway, sans-serif;
+  font-weight: 200;
   width: 90%;
   position: absolute;
   left: 0;
