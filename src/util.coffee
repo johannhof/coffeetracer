@@ -2,26 +2,20 @@
 
 class @Color
   constructor: (@r, @g, @b) ->
-  add: (c) =>
-    new Color(@r + c.r, @g + c.g, @b + c.b)
-  sub: (c) =>
-    new Color(@r - c.r, @g - c.g, @b - c.b)
-  mulColor: (c) =>
-    new Color(@r * c.r, @g * c.g, @b * c.b)
-  mulNumber: (d) =>
-    new Color(@r * d, @g * d, @b * d)
+  add: (c) -> new Color(@r + c.r, @g + c.g, @b + c.b)
+  sub: (c) -> new Color(@r - c.r, @g - c.g, @b - c.b)
+  mulColor: (c) -> new Color(@r * c.r, @g * c.g, @b * c.b)
+  mulNumber: (d) -> new Color(@r * d, @g * d, @b * d)
 
 class @Ray
   constructor: (@o, @d) ->
-  at: (t) =>
-    @o.add(@d.mul(t))
-  tOf: (p) =>
-    @o.subPoint(p).magnitude
+  at: (t) -> @o.add(@d.mul(t))
+  tOf: (p) -> @o.subPoint(p).magnitude
 
 class @World
   constructor: (@backgroundColor, @elements, @lights, @ambient, @indexOfRefraction) ->
   hit: (ray) =>
-    temp = null;
+    temp = null
     for element in @elements
       h = element.hit(ray)
       if temp is null

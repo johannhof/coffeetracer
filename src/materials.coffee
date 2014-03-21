@@ -1,14 +1,14 @@
 class @SingleColorMaterial
   constructor: (@color) ->
     @singleColorIndicator = true
-  colorFor: (hit, world, tracer) =>
+  colorFor: (hit, world, tracer) ->
     for l in world.lights
       if l.illuminates(hit.ray.at(hit.t), world) then return @color
     world.backgroundColor
 
 class @LambertMaterial
   constructor: (@color) ->
-  colorFor: (hit, world, tracer) =>
+  colorFor: (hit, world, tracer) ->
     returnColor = @color.mulColor(world.ambient)
     for l in world.lights
       if l.illuminates(hit.ray.at(hit.t), world)
@@ -18,7 +18,7 @@ class @LambertMaterial
 
 class @PhongMaterial
   constructor: (@diffuse, @specular, @exponent) ->
-  colorFor: (hit, world, tracer) =>
+  colorFor: (hit, world, tracer) ->
     returnColor = @diffuse.mulColor(world.ambient)
     pointOnRay = hit.ray.at hit.t
     for l in world.lights
@@ -32,7 +32,7 @@ class @PhongMaterial
 
 class @ReflectiveMaterial
   constructor: (@diffuse, @specular, @exponent, @reflection) ->
-  colorFor: (hit, world, tracer) =>
+  colorFor: (hit, world, tracer) ->
     returnColor = @diffuse.mulColor(world.ambient)
     pointOnRay = hit.ray.at(hit.t)
     for l in world.lights
@@ -50,7 +50,7 @@ class @TransparentMaterial
   @maxDepth: 3
   constructor: (@indexOfRefraction) ->
     @recursionCounter = TransparentMaterial.maxDepth
-  colorFor: (hit, world, tracer) =>
+  colorFor: (hit, world, tracer) ->
     if @recursionCounter-- <= 0 then return world.backgroundColor
     normal = hit.normal
     cosI = hit.ray.d.mul(-1).dot(normal)
