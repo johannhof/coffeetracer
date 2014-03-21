@@ -4,14 +4,14 @@ class @Geometry
 class @Plane extends Geometry
   constructor: (material, @a = new Point3(0, 0, 0), @n = new Normal3(0, 1, 0)) ->
     super material
-  hit: (ray) =>
+  hit: (ray) ->
     t = @a.subPoint(ray.o).dot(@n) / ray.d.dot(@n)
     if t > epsilon then new Hit(t, ray, this, @n) else null
 
 class @AxisAlignedBox extends Geometry
   constructor: (material, @lbf = new Point3(-0.5, -0.5, -0.5), @run = new Point3(0.5, 0.5, 0.5)) ->
     super material
-  hit: (ray) =>
+  hit: (ray) ->
     a = 1.0 / ray.d.x
     if a >= epsilon
       tx_min = (@lbf.x - ray.o.x) * a
@@ -19,14 +19,14 @@ class @AxisAlignedBox extends Geometry
     else
       tx_max = (@lbf.x - ray.o.x) * a
       tx_min = (@run.x - ray.o.x) * a
-    b = 1.0 / ray.d.y;
+    b = 1.0 / ray.d.y
     if b >= epsilon
       ty_min = (@lbf.y - ray.o.y) * b
       ty_max = (@run.y - ray.o.y) * b
     else
       ty_max = (@lbf.y - ray.o.y) * b
       ty_min = (@run.y - ray.o.y) * b
-    c = 1.0 / ray.d.z;
+    c = 1.0 / ray.d.z
     if c >= epsilon
       tz_min = (@lbf.z - ray.o.z) * c
       tz_max = (@run.z - ray.o.z) * c
@@ -72,7 +72,7 @@ class @AxisAlignedBox extends Geometry
 class @Sphere extends Geometry
   constructor: (material, @c = new Point3(0, 0, 0), @r = 1) ->
     super material
-  hit: (ray) =>
+  hit: (ray) ->
     a = ray.d.dot(ray.d)
     oMinusC = (ray.o.subPoint(@c))
     b = ray.d.dot(oMinusC.mul(2))
@@ -89,7 +89,7 @@ class @Sphere extends Geometry
 class @Triangle extends Geometry
   constructor: (material, @a,@b,@c) ->
     super material
-  hit: (r) =>
+  hit: (r) ->
     A = new Mat3x3(@a.x - @b.x, @a.x - @c.x, r.d.x, @a.y - @b.y, @a.y - @c.y, r.d.y, @a.z - @b.z, @a.z - @c.z, r.d.z)
     x = new Vector3(@a.x - r.o.x, @a.y - r.o.y, @a.z - r.o.z)
     beta = A.changeCol1(x).determinant / A.determinant
