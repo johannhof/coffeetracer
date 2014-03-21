@@ -1,10 +1,12 @@
+Ray = require('./util').Ray
+
 class @Camera
   constructor: (@e, @g, @t) ->
     @w = @g.mul(1.0 / @g.magnitude).mul(-1)
     @u = @t.cross(@w).mul(1.0 / @t.cross(@w).magnitude)
     @v = @w.cross(@u)
 
-class @OrthographicCamera extends Camera
+class @OrthographicCamera extends @Camera
   constructor: (@e, @g, @t, @s) ->
     super(@e, @g, @t)
   rayFor: (w, h, x, y) =>
@@ -12,7 +14,7 @@ class @OrthographicCamera extends Camera
     o = @e.add(@u.mul(a * @s * ((x - ((w - 1) / 2.0)) / (w - 1)))).add(@v.mul(@s * ((y - ((h - 1) / 2.0)) / (h - 1))))
     new Ray(o, @w.mul(-1))
 
-class @PerspectiveCamera extends Camera
+class @PerspectiveCamera extends @Camera
   constructor: (@e, @g, @t, @angle) ->
     super(@e, @g, @t)
   rayFor: (w, h, x, y) =>
