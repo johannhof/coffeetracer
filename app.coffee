@@ -336,7 +336,7 @@ $ ->
   startWorker: (number, numberOfWorkers) ->
     startW = width / numberOfWorkers * number
     endW = startW + width / numberOfWorkers
-    this.workers[number] = new Worker('engine.js')
+    this.workers[number] = new Worker('build/engine.js')
     this.workers[number].addEventListener('message', (e) ->
       extractImageData(e.data.imgData, startW, 0, endW, height)
       if numberOfWorkers is ++workerManager.numberOfFinishedWorkers

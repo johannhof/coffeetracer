@@ -14,7 +14,7 @@ class @Ray
 
 class @World
   constructor: (@backgroundColor, @elements, @lights, @ambient, @indexOfRefraction) ->
-  hit: (ray) =>
+  hit: (ray) ->
     temp = null
     for element in @elements
       h = element.hit(ray)
@@ -44,7 +44,7 @@ class @Tracer
 
 class @Node
   constructor: (@transformation, @geometries) ->
-  hit: (ray) =>
+  hit: (ray) ->
     r = new Ray(@transformation.i.xPoint(ray.o), @transformation.i.xVector(ray.d))
     temp = null
     for element in @geometries
