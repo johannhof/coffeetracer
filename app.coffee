@@ -152,8 +152,8 @@ $ ->
   startTime = 0
 
   #######Parsing#######
-  cam = null;
-  world = null;
+  cam = null
+  world = null
   parseAmbientLight = ->
     ambientDiv = $("#ambientLight")
     new Color(parseFloat($(ambientDiv).children(".redInput").val()),
