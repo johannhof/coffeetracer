@@ -14,9 +14,9 @@ class @PointLight
   constructor: (@color, @castsShadows, @position) ->
   illuminates: (point, world) ->
     if not @castsShadows then return true
-    ray = new Ray(point, @position.subPoint(point).normalized())
+    ray = new Ray(@position, point.subPoint(@position).normalized())
     hit = world.hit(ray)
-    if not hit or Math.round(hit.t * 100000.0) / 100000.0 >= Math.round(ray.tOf(point) * 100000) / 100000.0
+    if not hit or Math.round(hit.t * 1000.0) / 1000.0 >= Math.round(ray.tOf(point) * 1000.0) / 1000.0
       return true
     false
   directionFrom: (point) ->
@@ -25,7 +25,7 @@ class @PointLight
 class @SpotLight
   constructor: (@color, @castsShadows, @position, @direction, @halfAngle) ->
   illuminates: (point, world) ->
-    ray = new Ray(point, @position.subPoint(point).normalized())
+    ray = new Ray(@position, point.subPoint(@position).normalized())
     hit = world.hit(ray)
     alpha = Math.acos(@direction.dot(point.subPoint(@position)) / (@direction.magnitude * point.subPoint(@position).magnitude))
     if alpha <= @halfAngle and (not @castsShadows or not hit or Math.round(hit.t * 100000) / 100000 >= Math.round(ray.tOf(point) * 100000) / 100000)
