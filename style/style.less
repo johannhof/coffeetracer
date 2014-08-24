@@ -1,14 +1,6 @@
-body, html {
-  width: 100%;
-  height: 100%;
-  font-family: 'Raleway', sans-serif;
-}
+@main-font: 'Raleway', sans-serif;
 
-button, select, input{
-  font-family: 'Raleway', sans-serif;
-}
-
-body {
+.gradient-bg-1{
   background: #e44d26;
   background: -moz-linear-gradient(left, #e44d26 0%, #d17423 69%);
   background: -webkit-gradient(linear, left top, right top, color-stop(0%, #e44d26), color-stop(69%, #d17423));
@@ -17,6 +9,16 @@ body {
   background: -ms-linear-gradient(left, #e44d26 0%, #d17423 69%);
   background: linear-gradient(to right, #e44d26 0%, #d17423 69%);
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#e44d26', endColorstr='#d17423', GradientType=1);
+}
+
+body, html {
+  width: 100%;
+  height: 100%;
+  font-family: @main-font;
+}
+
+button, select, input{
+  font-family: @main-font;
 }
 
 #loadDiv {
@@ -46,9 +48,11 @@ body {
   background: -ms-linear-gradient(top, rgba(219, 219, 219, 1) 0%, rgba(229, 229, 229, 1) 100%); /* IE10+ */
   background: linear-gradient(to bottom, rgba(219, 219, 219, 1) 0%, rgba(229, 229, 229, 1) 100%); /* W3C */
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#dbdbdb', endColorstr='#e5e5e5', GradientType=0); /* IE6-9 */
-  padding-bottom: 40px;
-  min-height: 88%;
-  position: relative;
+
+  min-height: 100%;
+  height: auto !important;
+  height: 100%;
+  margin: 0 auto -50px;
 }
 
 #html5-logo {
@@ -57,6 +61,7 @@ body {
 
 header {
   padding: 35px;
+  .gradient-bg-1;
 }
 
 input {
@@ -95,7 +100,7 @@ h2 {
   font-weight: 200;
 }
 
-#mainDiv {
+#main {
   padding: 30px;
 }
 
@@ -148,25 +153,20 @@ h2 {
   margin-left: 20px;
 }
 
+.push{
+  height: 50px;
+}
+
 footer {
+  box-sizing: border-box;
   text-align: center;
   padding: 15px 5%;
   color: white;
   font-size: 20px;
-  font-family: Raleway, sans-serif;
   font-weight: 200;
-  width: 90%;
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  background: rgb(228, 77, 38); /* Old browsers */
-  background: -moz-linear-gradient(left, rgba(228, 77, 38, 1) 0%, rgba(209, 116, 35, 1) 69%); /* FF3.6+ */
-  background: -webkit-gradient(linear, left top, right top, color-stop(0%, rgba(228, 77, 38, 1)), color-stop(69%, rgba(209, 116, 35, 1))); /* Chrome,Safari4+ */
-  background: -webkit-linear-gradient(left, rgba(228, 77, 38, 1) 0%, rgba(209, 116, 35, 1) 69%); /* Chrome10+,Safari5.1+ */
-  background: -o-linear-gradient(left, rgba(228, 77, 38, 1) 0%, rgba(209, 116, 35, 1) 69%); /* Opera 11.10+ */
-  background: -ms-linear-gradient(left, rgba(228, 77, 38, 1) 0%, rgba(209, 116, 35, 1) 69%); /* IE10+ */
-  background: linear-gradient(to right, rgba(228, 77, 38, 1) 0%, rgba(209, 116, 35, 1) 69%); /* W3C */
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#e44d26', endColorstr='#d17423', GradientType=1); /* IE6-9 */
+  width: 100%;
+  height: 50px;
+  .gradient-bg-1;
 }
 
 footer img {

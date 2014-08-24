@@ -1,5 +1,7 @@
 $ = jQuery
 $ ->
+  React.renderComponent `<Raytracer />`, document.getElementById("main")
+
   $("#loadDiv").toggle()
   #######Objects#######
   #Get the templates for for all divs that can be added/removed
@@ -39,8 +41,11 @@ $ ->
   createObjectDiv = (objectName, propertyHtml, isNodeObject) ->
     div = document.createElement "div"
     div.setAttribute("class", objectName)
-    $(div).css("border", "1px solid lightgrey").css("margin-bottom", "5px").css("padding",
-                                                                                "10px").append($("#objectHTMLExample").html())
+    $(div)
+      .css("border", "1px solid lightgrey")
+      .css("margin-bottom", "5px")
+      .css("padding", "10px")
+      .append($("#objectHTMLExample").html())
     $(div).children("b").html(objectName + ":")
     if not isNodeObject then $(div).append(propertyHtml)
     addRemoveButtonHandler(div)
@@ -58,11 +63,18 @@ $ ->
   createNodeDiv = ->
     div = document.createElement "div"
     div.setAttribute("class", "node")
-    $(div).css("border", "1px solid lightgrey").css("margin-bottom", "5px").css("padding", "10px").append(nodeHTML)
+    $(div)
+      .css("border", "1px solid lightgrey")
+      .css("margin-bottom", "5px")
+      .css("padding", "10px")
+      .append(nodeHTML)
     addRemoveButtonHandler(div)
     $(div).children(".input-append").children(".addNodeObject").click ->
-      $(div).children(".nodeContainer").append(getObjectHTML($(div).children(".input-append").children(".nodeSelectObject").val(),
-                                                             true))
+      $(div)
+        .children(".nodeContainer")
+        .append(getObjectHTML($(div)
+        .children(".input-append")
+        .children(".nodeSelectObject").val(), true))
     $(div).children(".input-append").children(".addTransformation").click ->
       $(div).children(".transformationContainer").append(getTransformHTML($(div).children(".input-append").children(".nodeSelectTransformation").val()))
     div
@@ -327,47 +339,23 @@ $ ->
     world = new World(parseBackgroundColor(), parseObjects(), parseLights(), parseAmbientLight(),
                       parseFloat($("#worldDiv").children(".indexOfRefraction").val()))
 
-  workerManager = {
-  workers:
-    []
+  workerManager = null
 
-  numberOfFinishedWorkers: 0
-
-  startWorker: (number, numberOfWorkers) ->
-    startW = width / numberOfWorkers * number
-    endW = startW + width / numberOfWorkers
-    this.workers[number] = new Worker('build/engine.js')
-    this.workers[number].addEventListener('message', (e) ->
-      extractImageData(e.data.imgData, startW, 0, endW, height)
-      if numberOfWorkers is ++workerManager.numberOfFinishedWorkers
-        ctx.putImageData(imgData, 0, 0)
-        $("#loadDiv").toggle()
-        $("#timeDiv").html("Rendered with " + workerManager.numberOfFinishedWorkers + " workers in " + (Date.now() - startTime) / 1000 + " Seconds")
-    , false)
-    this.workers[number].postMessage(JSON.stringify({startW, endW, width, height, cam, world}))
-
-  startWorkers: (numberOfWorkers) ->
-    workerManager.numberOfFinishedWorkers = 0
-    for number in [0..numberOfWorkers - 1]
-      this.startWorker(number, numberOfWorkers)
-    # return true to avoid coffeescript making an array of results to return
-    true
-
-  stopWorkers: ->
-    for i in [0..this.workers.length - 1]
-      this.workers[i].terminate()
-    $("#loadDiv").toggle()
-  }
-
-  $("#cancelButton").click ->
-    workerManager.stopWorkers()
+  $("#cancelButton").click -> workerManager.stopWorkers()
 
   render = (webWorkers) ->
     startTime = Date.now()
     if webWorkers
-      $("#loadDiv").toggle()
+      $("#loadDiv").show()
       numberOfWorkers = parseInt($("#numberOfWorkers").val(), 10)
-      workerManager.startWorkers(numberOfWorkers)
+      workerManager = new WorkerManager(numberOfWorkers, height, width, cam, world, imgData)
+      workerManager.start (imgData) ->
+        ctx.putImageData(imgData, 0, 0)
+        $("#loadDiv").hide()
+        $("#timeDiv").html(
+          "Rendered with " + numberOfWorkers +
+          " workers in " + (Date.now() - startTime) / 1000 + " Seconds"
+        )
     else
       tracer = new Tracer(world)
       for x in [0..width] by 1
@@ -378,13 +366,6 @@ $ ->
           imgData.data[(x + (height - y - 1) * width) * 4 + 2] = c.b * 255.0
       ctx.putImageData(imgData, 0, 0)
       $("#timeDiv").html("Rendered in " + (Date.now() - startTime) / 1000 + " Seconds")
-
-  extractImageData = (newImgData, sx, sy, ex, ey) ->
-    for x in [sx..ex] by 1
-      for y in [sy..ey] by 1
-        imgData.data[(x + (height - y - 1) * width) * 4 + 0] = newImgData[(x + (height - y - 1) * width) * 4 + 0]
-        imgData.data[(x + (height - y - 1) * width) * 4 + 1] = newImgData[(x + (height - y - 1) * width) * 4 + 1]
-        imgData.data[(x + (height - y - 1) * width) * 4 + 2] = newImgData[(x + (height - y - 1) * width) * 4 + 2]
 
   $("#goButton").click ->
     parseData()

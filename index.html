@@ -3,134 +3,25 @@
 
 <head>
   <title>Canvas Raytracer</title>
-  <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
-  <link rel="stylesheet" href="css/style.css">
-  <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+  <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
   <link href='http://fonts.googleapis.com/css?family=Raleway:400,300,200,100' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="build/css/style.css">
 </head>
 
 <body>
-  <header>
-    <h1>Canvas Raytracer</h1>
-    <a id="html5-logo" href="http://www.w3.org/html/logo/">
-      <img src="http://www.w3.org/html/logo/badge/html5-badge-h-css3-graphics-performance-semantics-storage.png" width="190" alt="HTML5 Powered with CSS3 / Styling, Graphics, 3D &amp; Effects, Performance &amp; Integration, Semantics, and Offline &amp; Storage"
-      title="HTML5 Powered with CSS3 / Styling, Graphics, 3D &amp; Effects, Performance &amp; Integration, Semantics, and Offline &amp; Storage">
-    </a>
-  </header>
   <div id="wrapper">
-    <div id="mainDiv" class="clearfix">
-      <div id="canvasDiv">
-        <div id="loadDiv">
-          <div class="centerMe">
-            <i class="icon-cogs icon-4x"></i>
-            <br>
-            <br>Rendering. Please wait...
-            <br>
-            <br>
-            <button id="cancelButton" class="btn btn-large btn-danger">Cancel</button>
-          </div>
-        </div>
-        <canvas id="mainCanvas" width="500" height="500"></canvas>
-        <br>
-        <div class="input-prepend">
-          <label class="add-on" for="widthInput"><i class="fa fa-arrows-h"></i>
-          </label>
-          <input class="span1" type="text" id="widthInput" placeholder="Width" value="500" size="4">
-        </div>
-        <div class="input-prepend">
-          <label class="add-on" for="heightInput"><i class="fa fa-arrows-v"></i>
-          </label>
-          <input class="span1" type="text" id="heightInput" placeholder="Height" size="4" value="500">
-        </div>
-        <button id="resizeCanvasButton" class="btn">Resize</button>
-        <br>
-
-        <div class="input-prepend">
-          <label class="add-on" for="webworkers">HTML5 Webworkers?</label>
-          <input type="checkbox" id="webworkers" checked>
-        </div>
-        <input id="numberOfWorkers" type="number" step="1" min="1" max="10" value="5">
-        <br>
-        <button class="btn btn-large btn-success" id="goButton"><i class="fa fa-cogs"></i> Render Image</button>
-        <div id="timeDiv"></div>
-      </div>
-      <div class="propertyContainer">
-        <div class="propertyDiv" id="worldDiv">
-          <h2><i class="fa fa-globe"></i> World</h2>
-          Background:
-          <input type="text" class="redInput" size="1" value="0">
-          <input type="text" class="greenInput" size="1" value="0">
-          <input type="text" class="blueInput" size="1" value="0">
-          <br>Index of Refraction:
-          <input type="text" class="indexOfRefraction" value="1" size="2">
-        </div>
-        <div class="propertyDiv" id="lightsDiv">
-          <h2>
-                <i class="fa fa-lightbulb-o"></i> Lights
-            </h2>
-
-          <div class="input-append">
-            <select id="selectLight">
-              <option value="PointLight">PointLight</option>
-              <option value="SpotLight">SpotLight</option>
-              <option value="DirectionalLight">Directional Light</option>
-            </select>
-            <button id="addLightButton" class="btn">Add</button>
-          </div>
-          <div id="ambientLight">
-            <b>Ambient:</b>
-            <input type="text" class="redInput" size="1" value="0.3">
-            <input type="text" class="greenInput" size="1" value="0.3">
-            <input type="text" class="blueInput" size="1" value="0.3">
-          </div>
-        </div>
-      </div>
-      <div class="propertyContainer">
-        <div class="propertyDiv" id="cameraDiv">
-          <h2><i class="fa fa-camera-retro"></i> Camera</h2>
-          <select id="selectCamera">
-            <option value="PerspectiveCamera">Perspective Camera</option>
-            <option value="OrthographicCamera">Orthographic Camera</option>
-          </select>
-          <br>e =
-          <input type="text" id="camera_e_x" value="5" size="2">
-          <input type="text" id="camera_e_y" value="5" size="2">
-          <input type="text" id="camera_e_z" value="5" size="2">
-          <br>g =
-          <input type="text" id="camera_g_x" value="-1" size="2">
-          <input type="text" id="camera_g_y" value="-1" size="2">
-          <input type="text" id="camera_g_z" value="-1" size="2">
-          <br>t =
-          <input type="text" id="camera_t_x" value="0" size="2">
-          <input type="text" id="camera_t_y" value="1" size="2">
-          <input type="text" id="camera_t_z" value="0" size="2">
-
-          <div id="cameraSpec">
-            <label for="camera_alpha">alpha = PI /</label>
-            <input type="text" id="camera_alpha" value="4" size="2">
-          </div>
-        </div>
-        <div class="propertyDiv" id="objectsDiv">
-          <h2>
-                <i class="fa fa-picture-o"></i> Objects
-            </h2>
-
-          <div class="input-append">
-            <select id="selectObject">
-              <option value="Node">Node</option>
-              <option value="Sphere">Sphere</option>
-              <option value="Box">Box</option>
-              <option value="Plane">Plane</option>
-              <option value="Triangle">Triangle</option>
-            </select>
-            <button id="addObjectButton" class="btn">Add</button>
-          </div>
-          <div id="objects">
-
-          </div>
-        </div>
-      </div>
-    </div>
+    <header>
+      <h1>Canvas Raytracer</h1>
+      <a id="html5-logo" href="http://www.w3.org/html/logo/">
+        <img src="http://www.w3.org/html/logo/badge/html5-badge-h-css3-graphics-performance-semantics-storage.png" width="190" alt="HTML5 Powered with CSS3 / Styling, Graphics, 3D &amp; Effects, Performance &amp; Integration, Semantics, and Offline &amp; Storage"
+        title="HTML5 Powered with CSS3 / Styling, Graphics, 3D &amp; Effects, Performance &amp; Integration, Semantics, and Offline &amp; Storage">
+      </a>
+    </header>
+    <main id="main" class="clearfix">
+    </main>
+    <div class="push"></div>
+  </div>
     <footer>
       <i class="fa fa-heart-o"></i> Johann Hofmann
     </footer>
@@ -364,10 +255,10 @@
         </div>
       </div>
     </div>
-  </div>
-  <script src="js/jquery-1.9.1.min.js" type="text/javascript"></script>
-  <script src="build/engine.js" type="text/javascript"></script>
-  <script src="build/app.js" type="text/javascript"></script>
+  <script src="http://fb.me/react-0.10.0.js"></script>
+  <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+  <script src="build/js/engine.js" type="text/javascript"></script>
+  <script src="build/js/app.js" type="text/javascript"></script>
 </body>
 
 </html>
