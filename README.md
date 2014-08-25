@@ -1,7 +1,7 @@
 Coffeetracer
 ============
 
-![](https://raw.githubusercontent.com/johannhof/coffeetracer/master/example.png)
+![](https://raw.githubusercontent.com/johannhof/coffeetracer/gh-pages/example.png)
 
 A simple interactive Raytracer in Coffeescript using HTML5 Canvas.
 
